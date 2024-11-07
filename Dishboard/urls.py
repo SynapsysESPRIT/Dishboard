@@ -16,12 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
+from Comment.views import CommentListView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('comment/', include("Comment.urls")),
+    path('', include("Comment.urls")),
+    path('comments/', CommentListView.as_view(), name='comment_list'),
+    
 
 
 ]

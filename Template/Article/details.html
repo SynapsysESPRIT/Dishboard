@@ -1,0 +1,14 @@
+<h1>Title: {{ article.title }}</h1>
+
+<h2>Description: {{ article.description }}</h2>
+
+<!-- Si vous avez des pièces jointes, vous pouvez ajouter un lien pour les afficher -->
+{% if article.piece_jointe %}
+    <p>Attachment: <a href="{{ article.piece_jointe.url }}" target="_blank">{{ article.piece_jointe.name }}</a></p>
+{% endif %}
+
+<p>Created At: {{ article.created_at }}</p>
+
+<p>Updated At: {{ article.updated_at }}</p>
+
+<a href="{% url 'list' %}">Go back</a>

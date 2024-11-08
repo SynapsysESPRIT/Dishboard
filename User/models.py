@@ -63,34 +63,20 @@ class Client(User):
 
 # Professional model inheriting from User
 class Professional(User):
-    years_of_experience = models.PositiveIntegerField(
-        null=True,
-        blank=True,
-         #validators=[MinValueValidator(0), MaxValueValidator(100)]
-    )  # nb_années_exp
+    years_of_experience = models.PositiveIntegerField(null=True, blank=True)
     diploma = models.CharField(max_length=255, null=True, blank=True)
-    cin = models.CharField(
-        max_length=20,
-        unique=True,
-         #validators=[RegexValidator(r'^\d{8,20}$', message="Enter a valid CIN number.")]
-    )  # National ID
-    matricule = models.CharField(
-        max_length=20,
-        unique=True,
-        #validators=[RegexValidator(r'^\w{4,20}$', message="Enter a valid matricule.")]
-    )
+    cin = models.CharField(max_length=20, unique=True)
+    matricule = models.CharField(max_length=20, unique=True)
+    is_approved = models.BooleanField(default=False)  # Approval field
 
     class Meta:
         verbose_name = 'Professional'
         verbose_name_plural = 'Professionals'
 
-# Provider model inheriting from User
 class Provider(User):
     company_name = models.CharField(max_length=255)
-    tax_code = models.CharField(
-        max_length=20,
-         #validators=[RegexValidator(r'^\d{8,20}$', message="Enter a valid tax code.")]
-    )
+    tax_code = models.CharField(max_length=20)
+    is_approved = models.BooleanField(default=False)  # Approval field
 
     class Meta:
         verbose_name = 'Provider'

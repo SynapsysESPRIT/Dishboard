@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
     <title>
-        Soft UI Design System 3 PRO by Creative Tim
+        Dishboard - Sign Up
     </title>
     <!-- Extra details for Live View on GitHub Pages -->
     <!-- Canonical SEO -->
@@ -1965,139 +1965,133 @@
                         <div class="card card-plain">
                             <div class="card-header pb-0 text-left">
                                 <h4 class="font-weight-bolder">Sign Up</h4>
-                                <p class="mb-0">Enter your email and password to register</p>
+                                <p class="mb-0">Hurry and sign up, it's free!</p>
                             </div>
                             <div class="card-body pb-3">
-                                <form method="post">
+                                <form method="post" action="{% url 'sign-up' %}">
                                     {% csrf_token %}
+
+                                    <!-- User Type Selection -->
+                                    <label>User Type</label>
+                                    <div class="mb-3">
+                                        <select id="user-type" name="user_type" class="form-control" required
+                                            onchange="showFormFields()">
+                                            <option value="client">Client</option>
+                                            <option value="provider">Provider</option>
+                                            <option value="professional">Professional</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Common Fields -->
+                                    <label>First Name</label>
+                                    <div class="mb-3">
+                                        <input type="text" name="firstname" class="form-control"
+                                            placeholder="First Name" required>
+                                    </div>
+
+                                    <label>Last Name</label>
+                                    <div class="mb-3">
+                                        <input type="text" name="lastname" class="form-control" placeholder="Last Name"
+                                            required>
+                                    </div>
 
                                     <label>Username</label>
                                     <div class="mb-3">
                                         <input type="text" name="username" class="form-control" placeholder="Username"
-                                            aria-label="Username" required>
+                                            required>
                                     </div>
 
                                     <label>Email</label>
                                     <div class="mb-3">
                                         <input type="email" name="email" class="form-control" placeholder="Email"
-                                            aria-label="Email" required>
+                                            required>
                                     </div>
 
                                     <label>Password</label>
                                     <div class="mb-3">
                                         <input type="password" name="password1" class="form-control"
-                                            placeholder="Password" aria-label="Password" required>
+                                            placeholder="Password" required>
                                     </div>
 
                                     <label>Confirm Password</label>
                                     <div class="mb-3">
                                         <input type="password" name="password2" class="form-control"
-                                            placeholder="Confirm Password" aria-label="Confirm Password" required>
+                                            placeholder="Confirm Password" required>
                                     </div>
 
-                                    <label>First Name</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="first_name" class="form-control"
-                                            placeholder="First Name" aria-label="First Name">
+                                    <!-- Client-specific Fields -->
+                                    <div id="client-fields" style="display: none;">
+                                        <label>Weight</label>
+                                        <div class="mb-3">
+                                            <input type="number" step="any" name="weight" class="form-control"
+                                                placeholder="Weight">
+                                        </div>
+
+                                        <label>Height</label>
+                                        <div class="mb-3">
+                                            <input type="number" step="any" name="height" class="form-control"
+                                                placeholder="Height">
+                                        </div>
+
+                                        <label>BMI</label>
+                                        <div class="mb-3">
+                                            <input type="number" step="any" name="bmi" class="form-control"
+                                                placeholder="BMI">
+                                        </div>
                                     </div>
 
-                                    <label>Last Name</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="last_name" class="form-control" placeholder="Last Name"
-                                            aria-label="Last Name">
+                                    <!-- Provider-specific Fields -->
+                                    <div id="provider-fields" style="display: none;">
+                                        <label>Company Name</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="company_name" class="form-control"
+                                                placeholder="Company Name">
+                                        </div>
+
+                                        <label>Tax Code</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="tax_code" class="form-control"
+                                                placeholder="Tax Code">
+                                        </div>
                                     </div>
 
-                                    <label>Age</label>
-                                    <div class="mb-3">
-                                        <input type="number" name="age" class="form-control" placeholder="Age"
-                                            aria-label="Age">
+                                    <!-- Professional-specific Fields -->
+                                    <div id="professional-fields" style="display: none;">
+                                        <label>Years of Experience</label>
+                                        <div class="mb-3">
+                                            <input type="number" name="years_experience" class="form-control"
+                                                placeholder="Years of Experience">
+                                        </div>
+
+                                        <label>Diploma</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="diploma" class="form-control"
+                                                placeholder="Diploma">
+                                        </div>
+
+                                        <label>CIN</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="cin" class="form-control" placeholder="CIN">
+                                        </div>
+
+                                        <label>Matricule</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="matricule" class="form-control"
+                                                placeholder="Matricule">
+                                        </div>
                                     </div>
 
-                                    <label>Gender</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="gender" class="form-control" placeholder="Gender"
-                                            aria-label="Gender">
-                                    </div>
-
-                                    <label>Address</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="address" class="form-control" placeholder="Address"
-                                            aria-label="Address">
-                                    </div>
-
-                                    <label>Phone</label>
-                                    <div class="mb-3">
-                                        <input type="tel" name="phone" class="form-control" placeholder="Phone Number"
-                                            aria-label="Phone Number">
-                                    </div>
-
-                                    <!-- Client-specific fields -->
-                                    <label>Weight (for Client)</label>
-                                    <div class="mb-3">
-                                        <input type="number" step="any" name="weight" class="form-control"
-                                            placeholder="Weight" aria-label="Weight">
-                                    </div>
-
-                                    <label>Height (for Client)</label>
-                                    <div class="mb-3">
-                                        <input type="number" step="any" name="height" class="form-control"
-                                            placeholder="Height" aria-label="Height">
-                                    </div>
-
-                                    <label>BMI (for Client)</label>
-                                    <div class="mb-3">
-                                        <input type="number" step="any" name="bmi" class="form-control"
-                                            placeholder="BMI" aria-label="BMI">
-                                    </div>
-
-                                    <!-- Professional-specific fields -->
-                                    <label>Years of Experience (for Professional)</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="years_of_experience" class="form-control"
-                                            placeholder="Years of Experience" aria-label="Years of Experience">
-                                    </div>
-
-                                    <label>Diploma (for Professional)</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="diploma" class="form-control" placeholder="Diploma"
-                                            aria-label="Diploma">
-                                    </div>
-
-                                    <label>CIN (for Professional)</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="cin" class="form-control" placeholder="CIN"
-                                            aria-label="CIN">
-                                    </div>
-
-                                    <label>Matricule (for Professional)</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="matricule" class="form-control" placeholder="Matricule"
-                                            aria-label="Matricule">
-                                    </div>
-
-                                    <!-- Provider-specific fields -->
-                                    <label>Company Name (for Provider)</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="company_name" class="form-control"
-                                            placeholder="Company Name" aria-label="Company Name">
-                                    </div>
-
-                                    <label>Tax Code (for Provider)</label>
-                                    <div class="mb-3">
-                                        <input type="text" name="tax_code" class="form-control" placeholder="Tax Code"
-                                            aria-label="Tax Code">
-                                    </div>
-
+                                    <!-- Terms and Conditions -->
                                     <div class="form-check form-check-info text-left">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
-                                            checked>
+                                            required>
                                         <label class="form-check-label" for="flexCheckDefault">
                                             I agree to the <a href="../../pages/privacy.html"
-                                                class="text-dark font-weight-bolder">Terms and
-                                                Conditions</a>
+                                                class="text-dark font-weight-bolder">Terms and Conditions</a>
                                         </label>
                                     </div>
 
+                                    <!-- Submit Button -->
                                     <div class="text-center">
                                         <button type="submit" class="btn bg-gradient-primary w-100 mt-4 mb-0">Sign
                                             up</button>
@@ -2125,13 +2119,36 @@
                             </div>
                             <h4 class="mt-5 text-white font-weight-bolder">Your journey starts here</h4>
                             <p class="text-white">Just as it takes a company to sustain a product, it takes a community
-                                to sustain a protocol.</p>
+                                to
+                                sustain a protocol.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- JavaScript to Show/Hide Form Fields Based on User Type -->
+    <script>
+        function showFormFields() {
+            const userType = document.getElementById("user-type").value;
+
+            // Hide all specific fields initially
+            document.getElementById("client-fields").style.display = "none";
+            document.getElementById("provider-fields").style.display = "none";
+            document.getElementById("professional-fields").style.display = "none";
+
+            // Show fields based on selected user type
+            if (userType === "client") {
+                document.getElementById("client-fields").style.display = "block";
+            } else if (userType === "provider") {
+                document.getElementById("provider-fields").style.display = "block";
+            } else if (userType === "professional") {
+                document.getElementById("professional-fields").style.display = "block";
+            }
+        }
+    </script>
+
     <!--   Core JS Files   -->
     <script src="{% static 'js/core/popper.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/core/bootstrap.min.js' %}" type="text/javascript"></script>

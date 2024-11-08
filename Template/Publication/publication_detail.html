@@ -169,12 +169,14 @@
     {{publication.recette.difficulty_level }}
   </p>
 
-  {% if recette.image %}
-  <img src="{{ recette.image.url }}" alt="{{ recette.titre }}" />
-  {% else %}
-  <p>Aucune image</p>
+  {% if publication.recette.image %}
+  <p><strong>Image de la Recette :</strong></p>
+  <img
+    src="{{ publication.recette.image.url }}"
+    alt="Image de la recette"
+    width="300"
+  />
   {% endif %}
-
   <a href="{% url 'publication_liste' %}">
     <button>Retour à la liste</button>
   </a>

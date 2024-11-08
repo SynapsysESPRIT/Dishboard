@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from datetime import date
+from Publication.models import Publication
 
 def validate_title_case(value):
     if not value[0].isupper():
@@ -39,6 +40,7 @@ class Comment(models.Model):
     )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
+    publication=models.ForeignKey(Publication,on_delete=models.CASCADE)
 
     def clean(self):
         if self.updated_at and self.created_at:

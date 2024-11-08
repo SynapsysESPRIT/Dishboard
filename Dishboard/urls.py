@@ -1,5 +1,5 @@
 """
-URL configuration for Dishboard project.
+URL configuration for mira project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -14,14 +14,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
-from django.urls import path,include
-
-
-
+from django.urls import path , include
+from django.conf import settings
+from django.conf.urls.static import static
+from Comment.views import CommentListView
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('comment/', include("Comment.urls")),
-
-
+    path("admin/", admin.site.urls),
+    path('Recette/', include("Recette.urls")),
+    path('Publication/', include("Publication.urls")),
+    path('', include("Comment.urls")),
+    path('comments/', CommentListView.as_view(), name='comment_list'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

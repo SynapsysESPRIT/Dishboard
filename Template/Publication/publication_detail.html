@@ -1,0 +1,122 @@
+{% block content %}
+<style>
+  /* General styling */
+  body {
+    font-family: Arial, sans-serif;
+    color: #3d3d3d;
+    background-color: #faf3e0;
+    padding: 20px;
+    margin: 0;
+  }
+
+  h2 {
+    text-align: center;
+    color: #d35400;
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  .content-box {
+    background-color: #fff5e1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  p {
+    margin: 10px 0;
+    font-size: 1.1em;
+  }
+
+  strong {
+    color: #5d4037;
+  }
+
+  img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  a button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #e67e22;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+  }
+
+  a button:hover {
+    background-color: #d35400;
+  }
+</style>
+
+<div class="content-box">
+  <h2>Détails de la Publication : {{ publication.title }}</h2>
+
+  <p><strong>Titre de la publication :</strong> {{ publication.title }}</p>
+  <p><strong>Recette Associée :</strong> {{ publication.recette.titre }}</p>
+  <p>
+    <strong>Description de la Recette :</strong>
+    {{publication.recette.description }}
+  </p>
+  <p><strong>Ingrédients :</strong> {{ publication.recette.inventory }}</p>
+  <p><strong>Instructions :</strong> {{ publication.recette.instructions }}</p>
+  <p>
+    <strong>Temps de cuisson :</strong> {{ publication.recette.cook_time }}
+    minutes
+  </p>
+  <p><strong>Portions :</strong> {{ publication.recette.servings }}</p>
+  <p><strong>Cuisine :</strong> {{ publication.recette.cuisine }}</p>
+  <p>
+    <strong>Niveau de difficulté :</strong>
+    {{publication.recette.difficulty_level }}
+  </p>
+
+  {% if publication.recette.image %}
+  <p><strong>Image de la Recette :</strong></p>
+  <img
+    src="{{ publication.recette.image.url }}"
+    alt="Image de la recette"
+    width="300"
+  />
+  {% endif %}
+
+  <a href="{% url 'publication_liste' %}">
+    <button>Retour à la liste</button>
+  </a>
+</div>
+
+<!-- List of comments -->
+<h3>Commentaires</h3>
+<div class="content-box">
+  {% if comments %}
+  <ul>
+    {% for comment in comments %}
+    <li><strong>{{ comment.title }}:</strong> {{ comment.contenu }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Aucun commentaire pour cette publication.</p>
+  {% endif %}
+</div>
+
+<!-- Form to add a comment -->
+<h3>Ajouter un commentaire</h3>
+<div class="content-box">
+  <form method="POST">
+    {% csrf_token %} {{ comment_form.as_p }}
+    <button type="submit">Ajouter Commentaire</button>
+  </form>
+</div>
+
+{% endblock %}

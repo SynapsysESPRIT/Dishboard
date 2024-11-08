@@ -1,0 +1,11 @@
+<!-- templates/User/list_professionals.html -->
+<h1>Professional List</h1>
+<a href="{% url 'add_professional' %}">Add New Professional</a>
+<ul>
+    {% for professional in professionals %}
+        <li>
+            <a href="{% url 'user_detail' professional.id %}">{{ professional.username }}</a> - {{ professional.email }}
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'home' %}">Back to Home</a>

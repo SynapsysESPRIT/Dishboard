@@ -1,0 +1,11 @@
+<!-- templates/User/list_providers.html -->
+<h1>Provider List</h1>
+<a href="{% url 'add_provider' %}">Add New Provider</a>
+<ul>
+    {% for provider in providers %}
+        <li>
+            <a href="{% url 'user_detail' provider.id %}">{{ provider.username }}</a> - {{ provider.email }}
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'home' %}">Back to Home</a>

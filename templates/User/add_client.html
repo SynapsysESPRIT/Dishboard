@@ -1,0 +1,8 @@
+<!-- templates/User/add_client.html -->
+<h1>Add Client</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'list_clients' %}">Back to Client List</a>

@@ -1,0 +1,208 @@
+{% block content %}
+<style>
+  /* General styling */
+  body {
+    font-family: "Roboto", sans-serif;
+    color: #2c3e50;
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin: 0;
+  }
+
+  h2 {
+    text-align: center;
+    color: #e67e22;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    color: #e67e22;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .content-box {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 30px auto;
+    transition: transform 0.3s ease;
+  }
+
+  .content-box:hover {
+    transform: translateY(-5px);
+  }
+
+  p {
+    margin: 15px 0;
+    font-size: 1.2em;
+    line-height: 1.6;
+  }
+
+  strong {
+    color: #34495e;
+    font-weight: bold;
+  }
+
+  img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 350px;
+  }
+
+  a button {
+    display: block;
+    margin: 25px auto;
+    padding: 12px 25px;
+    background-color: #e74c3c;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  a button:hover {
+    background-color: #c0392b;
+    transform: translateY(-3px);
+  }
+
+  /* Comment styling */
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    background-color: #ecf0f1;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  li strong {
+    color: #e67e22;
+  }
+
+  /* Form styling */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form input,
+  form textarea {
+    font-size: 1.1em;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #dcdde1;
+    background-color: #f7f7f7;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  form button {
+    padding: 12px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  form button:hover {
+    background-color: #2ecc71;
+    transform: translateY(-3px);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .content-box {
+      padding: 20px;
+      max-width: 100%;
+    }
+
+    h2 {
+      font-size: 2em;
+    }
+
+    h3 {
+      font-size: 1.5em;
+    }
+  }
+</style>
+
+<div class="content-box">
+  <h2>Détails de la Publication : {{ publication.title }}</h2>
+
+  <p><strong>Titre de la publication :</strong> {{ publication.title }}</p>
+  <p><strong>Recette Associée :</strong> {{ publication.recette.titre }}</p>
+  <p>
+    <strong>Description de la Recette :</strong>
+    {{publication.recette.description }}
+  </p>
+  <p><strong>Ingrédients :</strong> {{ publication.recette.inventory }}</p>
+  <p><strong>Instructions :</strong> {{ publication.recette.instructions }}</p>
+  <p>
+    <strong>Temps de cuisson :</strong> {{ publication.recette.cook_time }}
+    minutes
+  </p>
+  <p><strong>Portions :</strong> {{ publication.recette.servings }}</p>
+  <p><strong>Cuisine :</strong> {{ publication.recette.cuisine }}</p>
+  <p>
+    <strong>Niveau de difficulté :</strong>
+    {{publication.recette.difficulty_level }}
+  </p>
+
+  {% if publication.recette.image %}
+  <p><strong>Image de la Recette :</strong></p>
+  <img
+    src="{{ publication.recette.image.url }}"
+    alt="Image de la recette"
+    width="300"
+  />
+  {% endif %}
+  <a href="{% url 'publication_liste' %}">
+    <button>Retour à la liste</button>
+  </a>
+</div>
+
+<!-- List of comments -->
+<h3>Commentaires</h3>
+<div class="content-box">
+  {% if comments %}
+  <ul>
+    {% for comment in comments %}
+    <li><strong>{{ comment.title }}:</strong> {{ comment.contenu }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Aucun commentaire pour cette publication.</p>
+  {% endif %}
+</div>
+
+<!-- Form to add a comment -->
+<h3>Ajouter un commentaire</h3>
+<div class="content-box">
+  <form method="POST">
+    {% csrf_token %} {{ comment_form.as_p }}
+    <button type="submit">Ajouter Commentaire</button>
+  </form>
+</div>
+
+{% endblock %}

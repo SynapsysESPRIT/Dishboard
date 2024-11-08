@@ -1,10 +1,63 @@
+<style>
+    form {
+        width: 60%;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    form input[type="text"],
+    form input[type="file"],
+    form select,
+    form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+
+    form input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        font-weight: bold;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    form input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 15px;
+    }
+
+    .form-title {
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+</style>
+
 <form action="" method="post" enctype="multipart/form-data">
-
-
+    <div class="form-title">Add New Article</div>
     {% csrf_token %}
-    {{form.as_p}}
+    {{ form.as_p }}
 
-    <input type="submit" value="save">
-
-
+    <input type="submit" value="Save">
 </form>

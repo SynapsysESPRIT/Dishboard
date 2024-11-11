@@ -7,10 +7,19 @@ class RecetteCreateView(CreateView):
     model = Recette
     form_class = RecetteeModelForm
     template_name = 'Recette/ajouter.html'  # Assurez-vous de créer ce template
-    #success_url = reverse_lazy('recette_list')  # Redirigez vers une vue de liste après la création
+    success_url = reverse_lazy('liste_recettes')  # Redirigez vers une vue de liste après la création
 
 from django.shortcuts import render
 from .models import Recette
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Recette
+
+def recette_detail(request, pk):
+    recette = get_object_or_404(Recette, pk=pk)
+    return render(request, 'recette/recette_detail.html', {'recette': recette})
+
 
 def liste_recettes(request):
     # Récupérer toutes les recettes par défaut

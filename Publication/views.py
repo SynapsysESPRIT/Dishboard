@@ -7,10 +7,10 @@ from django.shortcuts import render, get_object_or_404
 def ajouter_publication(request):
     if request.method == 'POST':
         publication_form = PublicationForm(request.POST)
-        recette_form = RecetteeModelForm(request.POST)
+        recette_form = RecetteeModelForm(request.POST, request.FILES)  # Inclure request.FILES ici
 
         if publication_form.is_valid() and recette_form.is_valid():
-            # Sauvegarder la recette
+            # Sauvegarder la recette avec l'image
             recette = recette_form.save()
 
             # Créer une publication et l'associer à la recette
@@ -28,7 +28,6 @@ def ajouter_publication(request):
         'publication_form': publication_form,
         'recette_form': recette_form
     })
-
 
 
 # def publication_liste(request):

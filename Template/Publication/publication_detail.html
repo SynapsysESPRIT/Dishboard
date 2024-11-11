@@ -170,13 +170,14 @@
   </p>
 
   {% if publication.recette.image %}
-  <p><strong>Image de la Recette :</strong></p>
   <img
     src="{{ publication.recette.image.url }}"
-    alt="Image de la recette"
-    width="300"
+    alt="{{ publication.recette.titre }}"
   />
+  {% else %}
+  <p>Aucune image</p>
   {% endif %}
+
   <a href="{% url 'publication_liste' %}">
     <button>Retour à la liste</button>
   </a>

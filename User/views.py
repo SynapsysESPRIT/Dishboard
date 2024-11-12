@@ -104,3 +104,11 @@ class Login(LoginView):
 @login_required
 def profile_view(request, user_id):
     return render(request, 'settings.html', {'user_id': user_id})
+
+
+def update_user(request):
+    user = request.user  # Retrieves the currently logged-in user
+    if request.method == "POST":
+        # handle form submission, validation, and saving user data here
+        pass
+    return render(request, 'settings.html', {'user': user})

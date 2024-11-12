@@ -27,3 +27,7 @@ class AdminForm(UserForm):
     class Meta(UserForm.Meta):
         model = Admin
         fields = UserForm.Meta.fields
+
+
+
+

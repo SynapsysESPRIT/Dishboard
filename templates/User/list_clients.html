@@ -3,8 +3,8 @@
 <a href="{% url 'sign-up' %}">Add New Client</a>
 <ul>
     {% for client in clients %}
-        <li>
-            <a href="{% url 'user_detail' client.id %}">{{ client.username }}</a> - {{ client.email }}
-        </li>
+    <li>
+        <a href="{% url 'user_detail' client.id %}">{{ client.username }}</a> - {{ client.email }}
+    </li>
     {% endfor %}
 </ul>

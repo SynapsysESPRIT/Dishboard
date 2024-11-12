@@ -2,6 +2,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import User, Client, Professional, Provider, Admin
 from .forms import UserForm, ClientForm, ProfessionalForm, ProviderForm, AdminForm
+from django.contrib.auth.views import LoginView
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
 
 # List views
 def list_users(request):
@@ -49,14 +54,14 @@ def add_professional(request):
     if form.is_valid():
         form.save()
         return redirect('list_professionals')
-    return render(request, 'User/add_professional.html', {'form': form})
+    return render(request, 'User/sign-up-prof.html', {'form': form})
 
 def add_provider(request):
     form = ProviderForm(request.POST or None)
     if form.is_valid():
         form.save()
         return redirect('list_providers')
-    return render(request, 'User/add_provider.html', {'form': form})
+    return render(request, 'User/sign-up-prov.html', {'form': form})
 
 
 
@@ -77,3 +82,13 @@ def delete_user(request, user_id):
         user.delete()
         return redirect('list_users')
     return render(request, 'User/confirm_delete.html', {'user': user})
+
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'User/login.html'
+    login_url = 'login'
+
+@login_required
+def profile_view(request):
+    return render(request, 'index.html')

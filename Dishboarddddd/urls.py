@@ -20,8 +20,10 @@ from . import views
 
 
 
+
 urlpatterns = [
-     path('', views.home, name='index'),  # Home page
+    path('', views.home, name='home'),  # Home page route
+
     path('admin/', admin.site.urls),
     path('user/', include('User.urls')),
 ]

@@ -6,6 +6,7 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 # List views
@@ -32,34 +33,42 @@ def list_admins(request):
 # Detail views
 def user_detail(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, 'User/user_detail.html', {'user': user})
+    return render(request, 'User/settings.html', {'user': user})
 
-# Create views
 def add_user(request):
     form = UserForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        user = form.save(commit=False)  # Don't save yet
+        user.set_password(form.cleaned_data['password'])  # Hash the password
+        user.save()  # Now save to the database
         return redirect('list_users')
-    return render(request, 'User/add_user.html', {'form': form})
+    return render(request, 'User/sign-up.html', {'form': form})
 
 def add_client(request):
     form = ClientForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        client = form.save(commit=False)  # Don't save yet
+        client.set_password(form.cleaned_data['password1'])  # Hash the password
+        client.save()  # Now save to the database
+
         return redirect('list_clients')
     return render(request, 'User/sign-up.html', {'form': form})
 
 def add_professional(request):
     form = ProfessionalForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        professional = form.save(commit=False)  # Don't save yet
+        professional.set_password(form.cleaned_data['password1'])  # Hash the password
+        professional.save()  # Now save to the database
         return redirect('list_professionals')
     return render(request, 'User/sign-up-prof.html', {'form': form})
 
 def add_provider(request):
     form = ProviderForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        provider = form.save(commit=False)  # Don't save yet
+        provider.set_password(form.cleaned_data['password1'])  # Hash the password
+        provider.save()  # Now save to the database
         return redirect('list_providers')
     return render(request, 'User/sign-up-prov.html', {'form': form})
 
@@ -85,10 +94,13 @@ def delete_user(request, user_id):
 
 
 
-class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = 'User/login.html'
-    login_url = 'login'
+class Login(LoginView):
+    template_name="user/login.html"
+    
+    def get_success_url(self):
+        user_id = self.request.user.id
+        return reverse('user_detail', args=[user_id])
 
 @login_required
-def profile_view(request):
-    return render(request, 'index.html')
+def profile_view(request, user_id):
+    return render(request, 'settings.html', {'user_id': user_id})

@@ -1928,7 +1928,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="{% url 'login' %}">
+                            <form method="post">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <input name="username" type="text" class="form-control" placeholder="Username"

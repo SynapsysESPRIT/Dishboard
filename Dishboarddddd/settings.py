@@ -28,8 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'login'  # Redirect users to the login page after logout
+LOGIN_REDIRECT_URL = 'list_users'
+LOGOUT_REDIRECT_URL = 'login'  # Replace 'login' with your desired URL name
 
 
 # Application definition

@@ -22,8 +22,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.home, name='home'),  # Home page route
-
+    path('', views.home, name='home'),  # Maps '/home' to the home view
     path('admin/', admin.site.urls),
     path('user/', include('User.urls')),
 ]

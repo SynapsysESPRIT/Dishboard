@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
     <title>
-        Soft UI Design System 3 PRO by Creative Tim
+        Dishboard
     </title>
     <!-- Extra details for Live View on GitHub Pages -->
     <!-- Canonical SEO -->
@@ -147,7 +147,7 @@
                             href=" https://demos.creative-tim.com/soft-ui-design-system-pro/presentation.html "
                             rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom"
                             target="_blank">
-                            Soft UI 3 PRO
+                            DISHBOARD
                         </a>
                         <a href="https://www.creative-tim.com/product/soft-ui-design-system-pro#pricingCard"
                             class="btn btn-sm  bg-primary  btn-round mb-0 ms-auto d-lg-none d-block">Buy Now</a>
@@ -799,7 +799,7 @@
                                                             <i class="ni ni-diamond text-primary text-gradient text-lg"
                                                                 aria-hidden="true"></i>
                                                         </div>
-                                                        <span class="text-lg mt-2">Explore our<br>utilities pages</span>
+                                                        <span class="text-lg mt-2">The Great Food<br>Experience</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -807,31 +807,13 @@
                                                 <ul class="list-group">
                                                     <li
                                                         class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                        <a class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
+                                                        <a href="{% url 'login' %}" class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
                                                             id="dropdownSignIn">
-                                                            <span>Sign In</span>
+                                                            <span>Log in</span>
                                                             <img src="{% static 'img/down-arrow.svg' %}"
                                                                 alt="down-arrow" class="arrow">
                                                         </a>
-                                                        <div class="dropdown-menu mt-0 py-3 px-2"
-                                                            aria-labelledby="dropdownSignIn">
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/sign-in/sign-in-cover.html">
-                                                                <span>Side Cover</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/sign-in/sign-in-illustration.html">
-                                                                <span>Illustration</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/sign-in/sign-in-basic.html">
-                                                                <span>Basic</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md"
-                                                                href="./pages/sign-in/sign-in-simple.html">
-                                                                <span>Simple</span>
-                                                            </a>
-                                                        </div>
+                                                        
                                                     </li>
                                                     <li
                                                         class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
@@ -844,79 +826,24 @@
                                                         <div class="dropdown-menu mt-0 py-3 px-2"
                                                             aria-labelledby="dropdownSignUp">
                                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/sign-up/sign-up-cover.html">
-                                                                <span>Side Cover</span>
+                                                                href="{% url 'sign-up' %}">
+                                                                <span>I just want to eat!</span>
                                                             </a>
                                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/sign-up/sign-up-illustration.html">
-                                                                <span>Illustration</span>
+                                                                href="{% url 'sign-up-prof' %}">
+                                                                <span>Become a Professional!</span>
                                                             </a>
                                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/sign-up/sign-up-basic.html">
-                                                                <span>Basic</span>
+                                                                href="{% url 'sign-up-prov' %}">
+                                                                <span>I want to provide!</span>
                                                             </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/sign-up/sign-up-simple.html">
-                                                                <span>Simple</span>
-                                                            </a>
+                                                           
                                                         </div>
                                                     </li>
-                                                    <li
-                                                        class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                        <a class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
-                                                            id="dropdownPasswordReset">
-                                                            <span>Password Reset</span>
-                                                            <img src="{% static 'img/down-arrow.svg' %}"
-                                                                alt="down-arrow" class="arrow">
-                                                        </a>
-                                                        <div class="dropdown-menu mt-0 py-3 px-2"
-                                                            aria-labelledby="dropdownPasswordReset">
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/reset/reset-cover.html">
-                                                                <span>Side Cover</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/reset/reset-illustration.html">
-                                                                <span>Illustration</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/reset/reset-basic.html">
-                                                                <span>Basic</span>
-                                                            </a>
-                                                        </div>
-                                                    </li>
-                                                    <li
-                                                        class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                        <a class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
-                                                            id="dropdownError">
-                                                            <span>Error Pages</span>
-                                                            <img src="{% static 'img/down-arrow.svg' %}"
-                                                                alt="down-arrow" class="arrow">
-                                                        </a>
-                                                        <div class="dropdown-menu mt-0 py-3 px-2"
-                                                            aria-labelledby="dropdownError">
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/error-404.html">
-                                                                <span>404</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="./pages/error-500.html">
-                                                                <span>500</span>
-                                                            </a>
-                                                        </div>
-                                                    </li>
-                                                    <li class="nav-item list-group-item border-0 p-0">
-                                                        <a href="./pages/coming-soon.html"
-                                                            class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1">
-                                                            <span>Coming Soon</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-item list-group-item border-0 p-0">
-                                                        <a href="./pages/2fa-security.html"
-                                                            class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1">
-                                                            <span>2FA Security</span>
-                                                        </a>
-                                                    </li>
+                                                
+                                                
+                                                    
+                                        
                                                 </ul>
                                             </div>
                                         </div>
@@ -1953,9 +1880,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7 text-center mx-auto">
-                        <h1 class="text-white font-weight-bolder pt-3 mt-n5">Soft UI Design System 3 PRO</h1>
-                        <p class="lead text-white mt-3">Simple and innovative Web UI Kit built on top of Bootstrap 5.
-                            <br /> Join over 2.6 million developers around the world.
+                        <h1 class="text-white font-weight-bolder pt-3 mt-n5">DISHBOARD AI</h1>
+                        <p class="lead text-white mt-3">A7la Ness
+                            <br /> By Synapsys Group
                         </p>
                     </div>
                 </div>

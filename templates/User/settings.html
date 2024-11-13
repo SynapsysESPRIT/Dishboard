@@ -176,7 +176,7 @@
                         <a href="index.html" title=""><img src="{% static 'img/resource/logo.png' %}" alt="" /></a>
                     </div><!-- Logo -->
                     <div class="my-profiles-sec">
-                        <span><img src="{% static 'img/resource/mp1.jpg' %}" alt="" /> Ali TUFAN <i
+                        <span><img src="{% static 'img/resource/mp1.jpg' %}" alt="" /> {{ user.first_name }} {{ user.last_name }} <i
                                 class="la la-bars"></i></span>
                     </div>
                     <div class="wishlist-dropsec">
@@ -353,13 +353,13 @@
         <section class="overlape">
             <div class="block no-padding">
                 <div data-velocity="-.1"
-                    style="background: url({% static 'img/resource/mslider1.jpg' %}) repeat scroll 50% 422.28px transparent;"
+                    style="background: url(img/resource/mslider1.jpg) repeat scroll 50% 422.28px transparent;"
                     class="parallax scrolly-invisible no-parallax"></div><!-- PARALLAX BACKGROUND IMAGE -->
                 <div class="container fluid">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="inner-header">
-                                <h3>Welcome ALI TUFAN</h3>
+                                <h3>Welcome {{ user.first_name }} {{ user.last_name }}</h3>
                             </div>
                         </div>
                     </div>
@@ -389,7 +389,7 @@
                                                     class="la la-file-text"></i>Cv & Cover Letter</a></li>
                                         <li><a href="candidates_change_password.html" title=""><i
                                                     class="la la-flash"></i>Change Password</a></li>
-                                        <li><a href="#" title=""><i class="la la-unlink"></i>Logout</a></li>
+                                        <li><a href="{% url 'logout' %}" title=""><i class="la la-unlink"></i>Logout</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -418,117 +418,123 @@
                                                 are .jpg & .png</span>
                                         </div>
                                     </div>
-                                    <div class="upload-img-bar">
-                                        <span class="round"><img src="{% static 'img/resource/mpf1.jpg' %}"
-                                                alt="" /><i>x</i></span>
-                                        <div class="upload-info">
-                                            <a href="#" title="">Browse</a>
-                                            <span>Max file size is 1MB, Minimum dimension: 270x210 And Suitable files
-                                                are .jpg & .png</span>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="profile-form-edit">
                                     <form method="post">
-    {% csrf_token %}
-    <div class="row">
-        <!-- Username -->
-        <div class="col-lg-6">
-            <span class="pf-title">Username</span>
-            <div class="pf-field">
-                <input type="text" name="username" placeholder="Username" value="{{ user.username }}" />
-            </div>
-        </div>
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <!-- Username -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Username</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="username" placeholder="Username"
+                                                        value="{{ user.username }}" />
+                                                </div>
+                                            </div>
 
-        <!-- Email -->
-        <div class="col-lg-6">
-            <span class="pf-title">Email</span>
-            <div class="pf-field">
-                <input type="email" name="email" placeholder="Email" value="{{ user.email }}" />
-            </div>
-        </div>
+                                            <!-- Email -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Email</span>
+                                                <div class="pf-field">
+                                                    <input type="email" name="email" placeholder="Email"
+                                                        value="{{ user.email }}" />
+                                                </div>
+                                            </div>
 
-        <!-- First Name -->
-        <div class="col-lg-6">
-            <span class="pf-title">First Name</span>
-            <div class="pf-field">
-                <input type="text" name="first_name" placeholder="First Name" value="{{ user.first_name }}" />
-            </div>
-        </div>
+                                            <!-- First Name -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">First Name</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="first_name" placeholder="First Name"
+                                                        value="{{ user.first_name }}" />
+                                                </div>
+                                            </div>
 
-        <!-- Last Name -->
-        <div class="col-lg-6">
-            <span class="pf-title">Last Name</span>
-            <div class="pf-field">
-                <input type="text" name="last_name" placeholder="Last Name" value="{{ user.last_name }}" />
-            </div>
-        </div>
+                                            <!-- Last Name -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Last Name</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="last_name" placeholder="Last Name"
+                                                        value="{{ user.last_name }}" />
+                                                </div>
+                                            </div>
 
-        <!-- Age -->
-        <div class="col-lg-6">
-            <span class="pf-title">Age</span>
-            <div class="pf-field">
-                <input type="number" name="age" placeholder="Age" value="{{ user.age }}" />
-            </div>
-        </div>
+                                            <!-- Age -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Age</span>
+                                                <div class="pf-field">
+                                                    <input type="number" name="age" placeholder="Age"
+                                                        value="{{ user.age }}" />
+                                                </div>
+                                            </div>
 
-        <!-- Gender -->
-        <div class="col-lg-6">
-            <span class="pf-title">Gender</span>
-            <div class="pf-field">
-                <select name="gender" class="chosen">
-                    <option value="Male" {% if user.gender == "Male" %}selected{% endif %}>Male</option>
-                    <option value="Female" {% if user.gender == "Female" %}selected{% endif %}>Female</option>
-                </select>
-            </div>
-        </div>
+                                            <!-- Gender -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Gender</span>
+                                                <div class="pf-field">
+                                                    <select name="gender" class="chosen">
+                                                        <option value="Male" {% if user.gender == "Male" %}selected{% endif %}>Male</option>
+                                                        <option value="Female" {% if user.gender == "Female" %}selected{% endif %}>Female</option>
+                                                            
+                                                    </select>
+                                                </div>
+                                            </div>
 
-        <!-- Address -->
-        <div class="col-lg-6">
-            <span class="pf-title">Address</span>
-            <div class="pf-field">
-                <input type="text" name="address" placeholder="Address" value="{{ user.address }}" />
-            </div>
-        </div>
 
-        <!-- Phone -->
-        <div class="col-lg-6">
-            <span class="pf-title">Phone</span>
-            <div class="pf-field">
-                <input type="text" name="phone" placeholder="Phone" value="{{ user.phone }}" />
-            </div>
-        </div>
 
-        <!-- Weight -->
-        <div class="col-lg-6">
-            <span class="pf-title">Weight</span>
-            <div class="pf-field">
-                <input type="text" name="weight" placeholder="Weight in kg" value="{{ user.weight }}" />
-            </div>
-        </div>
 
-        <!-- Height -->
-        <div class="col-lg-6">
-            <span class="pf-title">Height</span>
-            <div class="pf-field">
-                <input type="text" name="height" placeholder="Height in cm" value="{{ user.height }}" />
-            </div>
-        </div>
+                                            <!-- Address -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Address</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="address" placeholder="Address"
+                                                        value="{{ user.address }}" />
+                                                </div>
+                                            </div>
 
-        <!-- BMI -->
-        <div class="col-lg-6">
-            <span class="pf-title">BMI</span>
-            <div class="pf-field">
-                <input type="text" name="bmi" placeholder="BMI" value="{{ user.bmi }}" />
-            </div>
-        </div>
+                                            <!-- Phone -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Phone</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="phone" placeholder="Phone"
+                                                        value="{{ user.phone }}" />
+                                                </div>
+                                            </div>
 
-        <!-- Submit Button -->
-        <div class="col-lg-12">
-            <button type="submit">Update</button>
-        </div>
-    </div>
-</form>
+                                            <!-- Weight -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Weight</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="weight" placeholder="Weight in kg"
+                                                        value="{{ user.weight }}" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Height -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">Height</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="height" placeholder="Height in cm"
+                                                        value="{{ user.height }}" />
+                                                </div>
+                                            </div>
+
+                                            <!-- BMI -->
+                                            <div class="col-lg-6">
+                                                <span class="pf-title">BMI</span>
+                                                <div class="pf-field">
+                                                    <input type="text" name="bmi" placeholder="BMI"
+                                                        value="{{ user.bmi }}" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Submit Button -->
+                                            <div class="col-lg-12">
+                                                <button type="submit">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
 
                                 </div>
                                 <div class="social-edit">
@@ -739,11 +745,11 @@
         <span class="close-profile"><i class="la la-close"></i></span>
         <div class="can-detail-s">
             <div class="cst"><img src="{% static 'img/resource/es1.jpg' %}" alt="" /></div>
-            <h3>David CARLOS</h3>
+            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
             <span><i>UX / UI Designer</i> at Atract Solutions</span>
-            <p>creativelayers088@gmail.com</p>
-            <p>Member Since, 2017</p>
-            <p><i class="la la-map-marker"></i>Istanbul / Turkey</p>
+            <p>{{ user.email }}</p>
+            <p>{Member Since, 2017}</p>
+            <p><i class="la la-map-marker"></i>{{user.address}}</p>
         </div>
         <div class="tree_widget-sec">
             <ul>
@@ -757,7 +763,7 @@
                         Letter</a></li>
                 <li><a href="candidates_change_password.html" title=""><i class="la la-flash"></i>Change Password</a>
                 </li>
-                <li><a href="#" title=""><i class="la la-unlink"></i>Logout</a></li>
+                <li><a href="{% url 'logout' %}" title=""><i class="la la-unlink"></i>Logout</a></li>
             </ul>
         </div>
     </div><!-- Profile Sidebar -->

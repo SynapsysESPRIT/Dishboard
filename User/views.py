@@ -31,8 +31,16 @@ def list_admins(request):
     return render(request, 'User/list_admins.html', {'admins': admins})
 
 # Detail views
-def user_detail(request, user_id):
+@login_required
+def user_detail_update(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_detail_update', user_id=user.id)
+    else:
+        form = UserForm(instance=user)
     return render(request, 'User/settings.html', {'user': user})
 
 def add_user(request):
@@ -72,19 +80,6 @@ def add_provider(request):
         return redirect('list_providers')
     return render(request, 'User/sign-up-prov.html', {'form': form})
 
-
-
-def edit_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('user_detail', user_id=user.id)
-    else:
-        form = UserForm(instance=user)
-    return render(request, 'User/edit_user.html', {'form': form, 'user': user})
-
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
@@ -99,16 +94,10 @@ class Login(LoginView):
     
     def get_success_url(self):
         user_id = self.request.user.id
-        return reverse('user_detail', args=[user_id])
+        return reverse('user_detail_update', args=[user_id])
 
 @login_required
 def profile_view(request, user_id):
     return render(request, 'settings.html', {'user_id': user_id})
 
 
-def update_user(request):
-    user = request.user  # Retrieves the currently logged-in user
-    if request.method == "POST":
-        # handle form submission, validation, and saving user data here
-        pass
-    return render(request, 'settings.html', {'user': user})

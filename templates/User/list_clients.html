@@ -4,7 +4,7 @@
 <ul>
     {% for client in clients %}
     <li>
-        <a href="{% url 'user_detail' client.id %}">{{ client.username }}</a> - {{ client.email }}
+        <a href="{% url 'user_detail_update' client.id %}">{{ client.username }}</a> - {{ client.email }}
     </li>
     {% endfor %}
 </ul>

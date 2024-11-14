@@ -1,0 +1,225 @@
+{% block content %}
+<style>
+  /* General styling */
+  body {
+    font-family: "Arial", sans-serif;
+    background-color: #faf3e0; /* Light, warm background color */
+    color: #5d4037; /* Dark brown text */
+    margin: 0;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #e67e22; /* Warm, food-related color */
+    margin-bottom: 30px;
+  }
+
+  form {
+    background-color: #fff5e1; /* Light yellowish background */
+    border: 1px solid #e0a96d; /* Subtle border */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    font-size: 1.4em;
+    color: #d35400;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #e0a96d;
+    padding-bottom: 5px;
+  }
+
+  label {
+    font-weight: bold;
+    color: #5d4037;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* Styling for text inputs, date inputs, and select fields */
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px; /* Reduced padding for a smaller look */
+    margin: 8px 0 16px; /* Adjusted margin for compactness */
+    border: 1px solid #e0a96d;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+  }
+
+  /* Styling for the textarea (Recette description, etc.) */
+  textarea {
+    height: 100px; /* Smaller height for the Recette description */
+  }
+
+  /* Styling for Recette section to make it smaller */
+  .recette-fields input,
+  .recette-fields textarea {
+    width: 100%;
+    padding: 8px; /* Smaller padding for Recette inputs */
+    margin-bottom: 12px; /* Less margin */
+    font-size: 0.95em; /* Smaller font size */
+  }
+
+  /* Styling for Publication section to remain larger */
+  .publication-fields input,
+  .publication-fields textarea {
+    width: 100%;
+    padding: 12px; /* Larger padding for Publication inputs */
+    margin-bottom: 20px;
+    font-size: 1em;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background-color: #e67e22; /* Warm orange for button */
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #d35400; /* Darker shade when hovering */
+  }
+
+  /* Button for returning to the list */
+  .back-btn {
+    width: 100%;
+    background-color: #3498db; /* Blue color for the back button */
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+  }
+
+  .back-btn:hover {
+    background-color: #2980b9; /* Darker blue when hovering */
+  }
+
+  /* Ensuring the form group spacing is even */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    form {
+      padding: 15px;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<h2>Ajouter une Publication avec une Recette</h2>
+
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <!-- Publication Section -->
+  <div class="form-group publication-fields">
+    <h3>Publication</h3>
+    {{ publication_form.title.errors }}
+    <label for="{{ publication_form.title.id_for_label }}"
+      >Titre de la Publication</label
+    >
+    {{ publication_form.title }}
+  </div>
+
+  <!-- Recette Section -->
+  <div class="form-group recette-fields">
+    <h3>Recette</h3>
+    {{ recette_form.titre.errors }}
+    <label for="{{ recette_form.titre.id_for_label }}"
+      >Titre de la Recette</label
+    >
+    {{ recette_form.titre }}
+  </div>
+
+  <div class="form-group recette-fields">
+    {{ recette_form.description.errors }}
+    <label for="{{ recette_form.description.id_for_label }}"
+      >Description de la Recette</label
+    >
+    {{ recette_form.description }}
+  </div>
+
+  <div class="form-group recette-fields">
+    {{ recette_form.inventory.errors }}
+    <label for="{{ recette_form.inventory.id_for_label }}">Ingrédients</label>
+    {{ recette_form.inventory }}
+  </div>
+
+  <div class="form-group recette-fields">
+    {{ recette_form.instructions.errors }}
+    <label for="{{ recette_form.instructions.id_for_label }}"
+      >Instructions</label
+    >
+    {{ recette_form.instructions }}
+  </div>
+
+  <div class="form-group recette-fields">
+    {{ recette_form.cook_time.errors }}
+    <label for="{{ recette_form.cook_time.id_for_label }}"
+      >Temps de cuisson (minutes)</label
+    >
+    {{ recette_form.cook_time }}
+  </div>
+
+  <div class="form-group recette-fields">
+    {{ recette_form.servings.errors }}
+    <label for="{{ recette_form.servings.id_for_label }}"
+      >Nombre de portions</label
+    >
+    {{ recette_form.servings }}
+  </div>
+
+  <div class="form-group recette-fields">
+    {{ recette_form.cuisine.errors }}
+    <label for="{{ recette_form.cuisine.id_for_label }}">Cuisine</label>
+    {{ recette_form.cuisine }}
+  </div>
+
+  <div class="form-group recette-fields">
+    {{ recette_form.difficulty_level.errors }}
+    <label for="{{ recette_form.difficulty_level.id_for_label }}"
+      >Niveau de difficulté</label
+    >
+    {{ recette_form.difficulty_level }}
+  </div>
+  <div class="form-group recette-fields">
+    {{ recette_form.image.errors }}
+    <label for="{{ recette_form.image.id_for_label }}"
+      >Image de la Recette</label
+    >
+    {{ recette_form.image }}
+  </div>
+  <!-- Submit Button -->
+  <button type="submit">Ajouter</button>
+
+  <!-- Back to list Button -->
+  <a href="{% url 'publication_liste' %}">
+    <button type="button" class="back-btn">
+      Retour à la liste des Publications
+    </button>
+  </a>
+</form>
+{% endblock %}

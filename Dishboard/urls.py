@@ -1,5 +1,5 @@
 """
-URL configuration for Dishboarddddd project.
+URL configuration for Dishboard project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from . import views
-
+from django.conf import settings
+from Comment.views import CommentListView
 
 
 
@@ -25,4 +26,7 @@ urlpatterns = [
     path('', views.home, name='home'),  # Maps '/home' to the home view
     path('admin/', admin.site.urls),
     path('user/', include('User.urls')),
+    path('Recette/', include("Recette.urls")),
+    path('Publication/', include("Publication.urls")),
+    path('comments/', CommentListView.as_view(), name='comment_list'),
 ]

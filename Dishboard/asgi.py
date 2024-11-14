@@ -1,5 +1,5 @@
 """
-ASGI config for Dishboarddddd project.
+ASGI config for Dishboard project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Dishboarddddd.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Dishboard.settings')
 
 application = get_asgi_application()

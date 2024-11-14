@@ -1,0 +1,234 @@
+{% block content %}
+<style>
+  /* General styling */
+  body {
+    font-family: Arial, sans-serif;
+    color: #3d3d3d;
+    background-color: #faf3e0;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #d35400; /* Warm food-themed color */
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  /* Form styling */
+  form {
+    background-color: #fff5e1;
+    border: 1px solid #e0a96d;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto 20px;
+  }
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .form-field {
+    flex: 1;
+    min-width: 200px; /* Ensures fields are not too narrow */
+  }
+
+  label {
+    color: #5d4037;
+    font-weight: bold;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0a96d;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background-color: #e67e22;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #d35400;
+  }
+
+  /* Table styling */
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f5d3a1;
+    color: #3d3d3d;
+    font-weight: bold;
+  }
+
+  td {
+    background-color: #fffaf0;
+  }
+
+  tr:hover {
+    background-color: #f9e5c2;
+  }
+
+  /* Action button styling */
+  a button {
+    background-color: #e67e22;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  a button:hover {
+    background-color: #d35400;
+  }
+
+  /* Add Publication Button styling */
+  .add-publication-btn {
+    background-color: #27ae60;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .add-publication-btn:hover {
+    background-color: #2ecc71;
+  }
+</style>
+
+<!-- Button to Add New Publication -->
+<a href="{% url 'ajouter_publication' %}">
+  <button class="add-publication-btn">Ajouter une Publication</button>
+</a>
+
+<h2>Liste des Publications</h2>
+
+<form method="GET" action="{% url 'publication_liste' %}">
+  <div class="form-row">
+    <div class="form-field">
+      <label for="title">Titre :</label>
+      <input type="text" name="title" placeholder="Search by title" value="{{ request.GET.title }}" />
+    </div>
+
+    <div class="form-field">
+      <label for="recette_title">Titre de Recette :</label>
+      <input type="text" name="recette_title" id="recette_title" placeholder="Titre de la recette" value="{{ request.GET.recette_title }}">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="cuisine">Cuisine :</label>
+      <input type="text" name="cuisine" id="cuisine" placeholder="Type de cuisine" value="{{ request.GET.cuisine }}">
+    </div>
+
+    <div class="form-field">
+      <label for="servings">Portions :</label>
+      <input type="number" name="servings" id="servings" min="1" placeholder="Nombre de portions" value="{{ request.GET.servings }}">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="min_date">Date de création min :</label>
+      <input type="date" name="min_date" id="min_date" value="{{ request.GET.min_date }}" />
+    </div>
+
+    <div class="form-field">
+      <label for="max_date">Date de création max :</label>
+      <input type="date" name="max_date" id="max_date" value="{{ request.GET.max_date }}" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="min_cook_time">Temps de cuisson min (min) :</label>
+      <input type="number" name="min_cook_time" id="min_cook_time" placeholder="Min" value="{{ request.GET.min_cook_time }}">
+    </div>
+    
+    <div class="form-field">
+      <label for="max_cook_time">Temps de cuisson max (min) :</label>
+      <input type="number" name="max_cook_time" id="max_cook_time" placeholder="Max" value="{{ request.GET.max_cook_time }}">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="difficulty">Niveau de difficulté :</label>
+      <select name="difficulty" id="difficulty">
+        <option value="">Tous</option>
+        <option value="Facile" {% if request.GET.difficulty == "Facile" %}selected{% endif %}>Facile</option>
+        <option value="Moyen" {% if request.GET.difficulty == "Moyen" %}selected{% endif %}>Moyen</option>
+        <option value="Difficile" {% if request.GET.difficulty == "Difficile" %}selected{% endif %}>Difficile</option>
+      </select>
+    </div>
+  </div>
+
+  <button type="submit">Rechercher</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Titre</th>
+      <th>Recette Associée</th>
+      <th>Date de Création</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for publication in publications %}
+    <tr>
+      <td>{{ publication.title }}</td>
+      <td>{{ publication.recette.titre }}</td>
+      <td>{{ publication.created_at }}</td>
+      <td>
+        <a href="{% url 'publication_detail' publication.pk %}">
+          <button>Voir Détails</button>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

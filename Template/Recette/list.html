@@ -1,0 +1,226 @@
+{% block content %}
+<style>
+  /* General styling */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #495057;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #e67e22; /* Warm color for the header */
+    font-size: 2.5em;
+    margin-bottom: 30px;
+  }
+
+  /* Form styling */
+  form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 0 auto 30px;
+  }
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-row div {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  label {
+    font-weight: bold;
+    color: #6c757d;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: #f7f7f7;
+    color: #495057;
+    box-sizing: border-box;
+  }
+
+  button[type="submit"] {
+    background-color: #e67e22;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: auto;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #d35400;
+  }
+
+  /* Add Recette Button Styling */
+  .add-recipe-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 30px;
+    font-size: 1.2em;
+    display: inline-block;
+    transition: background-color 0.3s;
+  }
+
+  .add-recipe-btn:hover {
+    background-color: #2980b9;
+  }
+
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f5d3a1;
+    color: #3d3d3d;
+    font-weight: bold;
+  }
+
+  td {
+    background-color: #fffaf0;
+  }
+
+  tr:hover {
+    background-color: #f9e5c2;
+  }
+
+  /* Image Styling */
+  img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+  }
+
+</style>
+
+<h2>Liste des Recettes</h2>
+
+<!-- Add Recette Button -->
+<a href="{% url 'ajouter_recette' %}" class="add-recipe-btn">Ajouter une Recette</a>
+
+<!-- Formulaire de filtres -->
+<form method="get" action="." style="display: flex; flex-wrap: wrap; gap: 20px;">
+  <!-- Champ de recherche par titre -->
+  <div>
+    <label for="title">Titre :</label>
+    <input type="text" name="title" id="title" placeholder="Rechercher par titre" value="{{ request.GET.title }}">
+  </div>
+
+  <!-- Niveau de difficulté -->
+  <div>
+    <label for="difficulty">Niveau de difficulté :</label>
+    <select name="difficulty" id="difficulty">
+      <option value="">Tous</option>
+      <option value="Facile" {% if request.GET.difficulty == "Facile" %}selected{% endif %}>Facile</option>
+      <option value="Moyen" {% if request.GET.difficulty == "Moyen" %}selected{% endif %}>Moyen</option>
+      <option value="Difficile" {% if request.GET.difficulty == "Difficile" %}selected{% endif %}>Difficile</option>
+    </select>
+  </div>
+
+  <!-- Cuisine -->
+  <div>
+    <label for="cuisine">Cuisine :</label>
+    <input type="text" name="cuisine" id="cuisine" placeholder="Type de cuisine" value="{{ request.GET.cuisine }}">
+  </div>
+
+  <!-- Portions -->
+  <div>
+    <label for="servings">Portions :</label>
+    <input type="number" name="servings" id="servings" min="1" placeholder="Nombre de portions" value="{{ request.GET.servings }}">
+  </div>
+
+  <!-- Temps de cuisson -->
+  <div>
+    <label for="min_cook_time">Temps de cuisson min (min) :</label>
+    <input type="number" name="min_cook_time" id="min_cook_time" min="1" placeholder="Min" value="{{ request.GET.min_cook_time }}">
+  </div>
+
+  <div>
+    <label for="max_cook_time">Temps de cuisson max (min) :</label>
+    <input type="number" name="max_cook_time" id="max_cook_time" min="1" placeholder="Max" value="{{ request.GET.max_cook_time }}">
+  </div>
+
+  <!-- Bouton de soumission -->
+  <div style="align-self: end;">
+    <button type="submit">Filtrer</button>
+  </div>
+</form>
+
+<!-- Tableau des recettes -->
+<table>
+  <thead>
+    <tr>
+      <th>Titre</th>
+      <th>Description</th>
+      <th>Temps de cuisson (min)</th>
+      <th>Portions</th>
+      <th>Cuisine</th>
+      <th>Niveau de difficulté</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for recette in recettes %}
+      <tr>
+        <td>{{ recette.titre }}</td>
+        <td>{{ recette.description }}</td>
+        <td>{{ recette.cook_time }}</td>
+        <td>{{ recette.servings }}</td>
+        <td>{{ recette.cuisine }}</td>
+        <td>{{ recette.difficulty_level }}</td>
+        <td>
+          {% if recette.image %}
+            <img src="{{ recette.image.url }}" alt="{{ recette.titre }}">
+          {% else %}
+            <p>Aucune image</p>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'recette_detail' pk=recette.pk %}"">
+              <button>Details</button>
+          </a>
+      </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

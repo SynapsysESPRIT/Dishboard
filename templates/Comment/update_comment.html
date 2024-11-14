@@ -34,11 +34,7 @@
                     <div class="card-body p-4">
                         <form method="POST" class="needs-validation" novalidate>
                             {% csrf_token %}
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Title</label>
-                                {{ form.title }}
-                                <div class="form-text text-muted">Update your title</div>
-                            </div>
+                            
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Content</label>
                                 {{ form.contenu }}

@@ -201,8 +201,7 @@
   <div class="form-group recette-fields">
     {{ recette_form.difficulty_level.errors }}
     <label for="{{ recette_form.difficulty_level.id_for_label }}"
-      >Niveau de difficulté</label
-    >
+      >Niveau de difficulté</label>
     {{ recette_form.difficulty_level }}
   </div>
   <div class="form-group recette-fields">
@@ -216,7 +215,7 @@
   <button type="submit">Ajouter</button>
 
   <!-- Back to list Button -->
-  <a href="{% url 'publication_liste' %}">
+  <a href="{% url 'publication_list' %}">
     <button type="button" class="back-btn">
       Retour à la liste des Publications
     </button>

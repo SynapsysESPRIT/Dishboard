@@ -1,7 +1,7 @@
 # User/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import User, Client, Professional, Provider, Admin
-from .forms import ClientForm, ProfessionalForm, ProviderForm
+from .forms import ClientForm, ProfessionalForm, ProviderForm, UserForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse

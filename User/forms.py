@@ -1,7 +1,13 @@
 # User/forms.py
 
-from .models import Client, Professional, Provider
+from .models import User, Client, Professional, Provider
 from django.contrib.auth.forms import UserCreationForm
+from django import forms 
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'age', 'gender', 'address', 'phone']
 
 class ClientForm(UserCreationForm):
     class Meta:

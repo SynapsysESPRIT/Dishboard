@@ -1,0 +1,20 @@
+<!-- templates/registration/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- This will render the form fields automatically -->
+        <button type="submit">Login</button>
+    </form>
+
+    {% if next %}
+        <p>Redirecting you to <a href="{{ next }}">{{ next }}</a></p>
+    {% endif %}
+</body>
+</html>

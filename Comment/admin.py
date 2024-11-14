@@ -24,9 +24,9 @@ class CommentDateFilter(admin.SimpleListFilter):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['title', 'contenu', 'created_at', 'updated_at']
+    list_display = ['contenu', 'created_at', 'updated_at']
     list_filter = [CommentDateFilter, 'updated_at']
-    search_fields = ['title', 'contenu']
+    search_fields = ['contenu']
     date_hierarchy = 'created_at'
     ordering = ['-created_at']
     list_per_page = 20
@@ -36,8 +36,6 @@ class CommentAdmin(admin.ModelAdmin):
         
         if search_term:
             queryset |= self.model.objects.filter(
-                title__icontains=search_term
-            ) | self.model.objects.filter(
                 contenu__icontains=search_term
             )
         return queryset, use_distinct

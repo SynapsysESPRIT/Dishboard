@@ -69,6 +69,7 @@ class Recette(models.Model):
 
     # Adding a method to validate cook_time within a certain range
     def clean(self):
+     if self.cook_time is not None:
         if self.cook_time < 1 or self.cook_time > 480:  # max 8 hours
             raise ValidationError("Le temps de cuisson doit être entre 1 et 480 minutes.")
 

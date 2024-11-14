@@ -34,6 +34,7 @@ urlpatterns = [
     path('Publication/', include("Publication.urls")),
     path('comments/', CommentListView.as_view(), name='comment_list'),
     path('Article/', include('Article.urls')),
+    
 ]
 
 if settings.DEBUG:

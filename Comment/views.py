@@ -30,7 +30,7 @@ class CommentListView(ListView):
 
             if search:
                 queryset = queryset.filter(
-                    Q(title__icontains=search) | Q(contenu__icontains=search)
+                    Q(contenu__icontains=search)
                 )
 
             if date_filter:
@@ -55,16 +55,18 @@ def update_comment(request, id):
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return redirect('comment_list')
+            return redirect('Publication')  # Redirect back to Publication page
     else:
         form = CommentForm(instance=comment)
-    return render(request, 'Comment/update_comment.html', {'form': form})
+    return render(request, 'Publication/Publication.html', {'form': form})
+
 
 
 def delete_comment(request, id):
     comment = Comment.objects.get(id=id)
+    publication_id = comment.publication.id
     comment.delete()
-    return redirect('comment_list')
+    return redirect('publication_detail', pk=publication_id)
 
 def comment_detail(request, id):
     comment = Comment.objects.get(id=id)

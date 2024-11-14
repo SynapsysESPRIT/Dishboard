@@ -4,30 +4,34 @@ from .models import Publication
 from Recette.forms import RecetteeModelForm
 from .forms import PublicationForm
 from django.shortcuts import render, get_object_or_404
+
+
 def ajouter_publication(request):
     if request.method == 'POST':
-        publication_form = PublicationForm(request.POST)
-        recette_form = RecetteeModelForm(request.POST, request.FILES)  # Inclure request.FILES ici
+        # Create Recipe
+        recette = Recette.objects.create(
+            titre=request.POST['titre'],
+            description=request.POST['description'],
+            inventory=request.POST['inventory'],
+            instructions=request.POST['instructions'],
+            cook_time=request.POST['cook_time'],
+            servings=request.POST['servings'],
+            cuisine=request.POST['cuisine'],
+            difficulty_level=request.POST['difficulty_level'],
+            image=request.FILES['image']
+        )
+        
+    
+        publication = Publication.objects.create(
+            title=request.POST['title'],
+            recette=recette
+        )
+        
+        return redirect('publication_liste')
+        
+    return render(request, 'Publication/Publication_list.html')
 
-        if publication_form.is_valid() and recette_form.is_valid():
-            # Sauvegarder la recette avec l'image
-            recette = recette_form.save()
 
-            # Créer une publication et l'associer à la recette
-            publication = publication_form.save(commit=False)
-            publication.recette = recette  # Associe la recette à la publication
-            publication.save()
-
-            return redirect('publication_liste')  # Redirige vers la liste des publications après l'ajout
-
-    else:
-        publication_form = PublicationForm()
-        recette_form = RecetteeModelForm()
-
-    return render(request, 'Publication/ajouter.html', {
-        'publication_form': publication_form,
-        'recette_form': recette_form
-    })
 
 
 # def publication_liste(request):
@@ -114,7 +118,7 @@ def publication_liste(request):
         publications = publications.filter(recette__difficulty_level__iexact=difficulty_query)
 
     # Render the filtered publications to the template
-    return render(request, 'Publication/publication_liste.html', {'publications': publications})
+    return render(request, 'Publication/Publication_list.html', {'publications': publications})
 
 
 from Comment.forms import CommentForm
@@ -124,23 +128,65 @@ from django.shortcuts import get_object_or_404, redirect
 def publication_detail(request, pk):
     publication = get_object_or_404(Publication, pk=pk)
     comments = Comment.objects.filter(publication=publication)
+    latest_publications = Publication.objects.select_related('recette').order_by('-created_at')[:3]
 
-    # Handle the comment form submission
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
-            comment.publication = publication  # Link the comment to the publication
+            comment.publication = publication
             comment.save()
             return redirect('publication_detail', pk=publication.pk)
     else:
         comment_form = CommentForm()
 
-    return render(request, 'Publication/publication_detail.html', {
+    return render(request, 'Publication/Publication.html', {
         'publication': publication,
         'comments': comments,
-        'comment_form': comment_form
+        'comment_form': comment_form,
+        'latest_publications': latest_publications
     })
+
 from django import forms
 from .models import Publication, Recette
+
+def publication_view(request):
+    latest_posts = Publication.objects.select_related('recette').order_by('-created_at')[:3]
+    return render(request, 'Publication/Publication.html', {'latest_posts': latest_posts})
+
+
+def delete_publication(request, id):
+    publication = Publication.objects.get(id=id)
+    if request.method == 'POST':
+        publication.delete()
+        return redirect('publication_liste')
+
+def update_publication(request, id):
+    publication = Publication.objects.get(id=id)
+    
+    if request.method == 'POST':
+        # Update the publication
+        publication.title = request.POST['title']
+        
+        # Update the associated recipe
+        recette = publication.recette
+        recette.titre = request.POST['titre']
+        recette.description = request.POST['description']
+        recette.inventory = request.POST['inventory']
+        recette.instructions = request.POST['instructions']
+        recette.cook_time = request.POST['cook_time']
+        recette.servings = request.POST['servings']
+        recette.cuisine = request.POST['cuisine']
+        recette.difficulty_level = request.POST['difficulty_level']
+        
+        # Handle image update if provided
+        if 'image' in request.FILES:
+            recette.image = request.FILES['image']
+            
+        recette.save()
+        publication.save()
+        
+        return redirect('publication_liste')
+        
+    return redirect('publication_liste')
 

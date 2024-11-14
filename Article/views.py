@@ -70,4 +70,3 @@ class DeleteArticle(DeleteView):
 def blog(request):
     article = Article.objects.all()
     return render(request, 'Article/blog-posts.html', {"data": article})
-

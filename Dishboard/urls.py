@@ -35,5 +35,6 @@ urlpatterns = [
     path('comments/', CommentListView.as_view(), name='comment_list'),
     path('Article/', include('Article.urls')),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

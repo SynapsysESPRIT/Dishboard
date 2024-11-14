@@ -10,8 +10,8 @@ class Article(models.Model):
         upload_to="articles/",
         validators=[
             FileExtensionValidator(
-                allowed_extensions=['pdf', 'jpg'],
-                message="Only PDF and JPG files are allowed"
+                allowed_extensions=['png', 'jpg'],
+                message="Only PNG and JPG files are allowed"
             )
         ]
     )

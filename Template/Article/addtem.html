@@ -1,0 +1,80 @@
+<section>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-7 mx-auto d-flex justify-content-center flex-column">
+                <div class="card d-flex justify-content-center p-4 shadow-lg">
+                    <div class="text-center">
+                        <h3 class="text-gradient text-primary">Add New Article</h3>
+                        <p class="mb-0">
+                            Please fill in the details for the new article.
+                        </p>
+                    </div>
+                    <div class="card card-plain">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="card-body pb-2">
+                                <!-- Title Field -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="id_titre">Title</label>
+                                        <div class="input-group mb-4">
+                                            {{ form.titre }}
+                                        </div>
+                                        {% if form.titre.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.titre.errors %}
+                                                    <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Content Field -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="id_contenu">Content</label>
+                                        <div class="input-group mb-4">
+                                            {{ form.contenu }}
+                                        </div>
+                                        {% if form.contenu.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.contenu.errors %}
+                                                    <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Attach File (Optional) -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="id_piece_jointe">Attach File (Optional)</label>
+                                        <div class="input-group mb-4">
+                                            {{ form.piece_jointe }}
+                                        </div>
+                                        {% if form.piece_jointe.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.piece_jointe.errors %}
+                                                    <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button type="submit" class="btn btn-primary mt-3 mb-0">Save Article</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

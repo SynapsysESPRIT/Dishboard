@@ -1,25 +1,26 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from django.contrib.auth.views import LoginView
 from .models import Recette
 from .forms import RecetteeModelForm
-from django.shortcuts import render
 from django.core.paginator import Paginator
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render,get_object_or_404
+from django.urls import reverse
 from django.views.generic import *
-class RecetteCreateView(CreateView):
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+class RecetteCreateView(LoginRequiredMixin, CreateView):
     model = Recette
     form_class = RecetteeModelForm
-    template_name = 'Recette/ajouter.html'  # Assurez-vous de créer ce template
-    success_url = reverse_lazy('liste_recettes')  # Redirigez vers une vue de liste après la création
-
-from django.shortcuts import render
-from .models import Recette
+    template_name = 'Recette/ajouter.html'
+    success_url = reverse_lazy('liste_recettes')
 
 
-from django.shortcuts import render, get_object_or_404
-from .models import Recette
 
+
+@login_required
 def recette_detail(request, pk):
     recette = get_object_or_404(Recette, pk=pk)
     return render(request, 'recette/recette_detail.html', {'recette': recette})
@@ -36,6 +37,7 @@ class DeleteRecette(DeleteView):
     template_name="Recette/delete.html"
     success_url=reverse_lazy('liste_recettes')
 
+@login_required
 def liste_recettes(request):
     # Récupérer toutes les recettes par défaut
     recettes = Recette.objects.all()

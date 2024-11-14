@@ -65,9 +65,7 @@ class DeleteArticle(DeleteView):
     template_name = "Article/delete.html"  # Template pour la confirmation de suppression
     success_url = reverse_lazy('blog')
 
-#def article_detail(request, article_id):
-    #article = get_object_or_404(Article, id=article_id)
-    #return render(request, 'article_detail.html', {'article': article})
+
 
 def blog(request):
     article = Article.objects.all()

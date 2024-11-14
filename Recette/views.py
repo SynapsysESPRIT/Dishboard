@@ -3,6 +3,10 @@ from django.views.generic import CreateView
 from .models import Recette
 from .forms import RecetteeModelForm
 from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from django.views.generic import *
 class RecetteCreateView(CreateView):
     model = Recette
     form_class = RecetteeModelForm
@@ -20,11 +24,22 @@ def recette_detail(request, pk):
     recette = get_object_or_404(Recette, pk=pk)
     return render(request, 'recette/recette_detail.html', {'recette': recette})
 
+class UpdateConference(UpdateView):
+    model=Recette
+    template_name="Recette/ajouter.html"
+    form_class=RecetteeModelForm
+    success_url=reverse_lazy('liste_recettes')
+    
+class DeleteRecette(DeleteView):
+    
+    model=Recette
+    template_name="Recette/delete.html"
+    success_url=reverse_lazy('liste_recettes')
 
 def liste_recettes(request):
     # Récupérer toutes les recettes par défaut
     recettes = Recette.objects.all()
-
+   
     # Filtrer par titre si le paramètre est présent
     title_query = request.GET.get('title')
     if title_query:
@@ -65,5 +80,16 @@ def liste_recettes(request):
         except ValueError:
             pass
 
+    paginator = Paginator(recettes, 6)  # 3 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'recettes': page_obj,  # Only pass the paginated recipes
+        'page_obj': page_obj
+    }
+
+    # Return the recipes filtered to the template
+    return render(request, 'recette/list.html', context)
+
     # Renvoyer les recettes filtrées au template
-    return render(request, 'recette/list.html', {'recettes': recettes})
+   

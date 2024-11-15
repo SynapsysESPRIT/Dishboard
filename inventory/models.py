@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User  # Import User model for user integration
+from User.models import User  # Import User model for user integration
 
 class Ingredient(models.Model):
     label = models.CharField(max_length=100)

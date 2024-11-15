@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+from .jazzmin_config import JAZZMIN_SETTINGS, JAZZMIN_UI_TWEAKS
 import os  # Assurez-vous que cet import est en haut du fichier
 
 
@@ -37,6 +37,7 @@ LOGOUT_REDIRECT_URL = 'login'  # Replace 'login' with your desired URL name
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

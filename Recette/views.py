@@ -16,11 +16,7 @@ class RecetteCreateView(LoginRequiredMixin, CreateView):
     form_class = RecetteeModelForm
     template_name = 'Recette/ajouter.html'
     success_url = reverse_lazy('liste_recettes')
-    def form_valid(self, form):
-        # Automatically associate the logged-in user with the recipe (client)
-        form.instance.client = self.request.user.client  # assuming the user is a Client
-        return super().form_valid(form)
-
+    
 
 
 

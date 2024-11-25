@@ -26,5 +26,9 @@ urlpatterns = [
     path('login/', Login.as_view() , name="login" ),
 
     path('logout/', LogoutView.as_view(), name='logout'),  # Adds the logout route
+
+    path('verify-email/<str:token>/', verify_email, name='verify_email'),
+
+    
     
 ]

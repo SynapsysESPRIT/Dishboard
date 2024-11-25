@@ -1,9 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator, EmailValidator
+from django.utils.crypto import get_random_string
 
 # Base User model
 class User(AbstractUser):
+    is_verified = models.BooleanField(default=False)
+    email_verification_token = models.CharField(max_length=64, null=True, blank=True)
     age = models.PositiveIntegerField(
         null=True, 
         blank=True, 
@@ -33,6 +36,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+    def generate_verification_token(self):
+        self.email_verification_token = get_random_string(64)
 
 # Client model inheriting from User
 class Client(User):

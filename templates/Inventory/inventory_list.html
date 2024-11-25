@@ -8719,16 +8719,17 @@
             <div class="row">
                 <!-- Second Div with Inventory Section and Background Image -->
                 <div class="col-lg-9 z-index-2 border-radius-xl mt-n10 mx-auto py-3 blur shadow-blur"
-                    style="background-image: url('" )>
+                    style="background-image: url('your-background-image.jpg');">
                     <!-- Inventory Display Section -->
                     <h2 class="text-center mb-4">Your Inventory</h2>
-
+        
                     <!-- Display Current Inventory -->
                     <div class="table-container">
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th class="ingredient-column">Ingredient Name</th>
+                                    <th class="unit-column">Unit</th>
                                     <th class="quantity-column">Quantity</th>
                                     <th class="action-column">Actions</th>
                                 </tr>
@@ -8737,6 +8738,7 @@
                                 {% for item in user_inventory %}
                                 <tr>
                                     <td class="ingredient-column">{{ item.ingredient.label }}</td>
+                                    <td class="unit-column">{{ item.ingredient.unit }}</td> <!-- Unit Column -->
                                     <td class="quantity-column">{{ item.quantity }}</td>
                                     <td class="action-column">
                                         <!-- Increase Quantity -->
@@ -8744,8 +8746,10 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="ingredient_id" value="{{ item.id }}">
                                             <input type="hidden" name="quantity_change" value="1">
+                                            <button type="submit" name="increase_quantity"
+                                                class="btn btn-sm btn-light">+</button>
                                         </form>
-
+        
                                         <!-- Decrease Quantity -->
                                         <form method="POST" action="{% url 'inventory-view' %}" style="display:inline;">
                                             {% csrf_token %}
@@ -8754,7 +8758,7 @@
                                             <button type="submit" name="decrease_quantity"
                                                 class="btn btn-sm btn-light">-</button>
                                         </form>
-
+        
                                         <!-- Remove Ingredient -->
                                         <form method="POST" action="{% url 'inventory-view' %}" style="display:inline;">
                                             {% csrf_token %}
@@ -8767,7 +8771,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="3" class="text-center">No ingredients in inventory.</td>
+                                    <td colspan="4" class="text-center">No ingredients in inventory.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -8775,82 +8779,84 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
 
-            <!-- Row for Add Ingredients Section -->
-            <div class="row mt-5">
-                <div class="container mt-sm-5 mt-3">
-                    <!-- Add Ingredients Section -->
-                    <h3 class="text-center mb-4">Add Ingredients</h3>
+           <!-- Row for Add Ingredients Section -->
+<div class="row mt-5">
+    <div class="container mt-sm-5 mt-3">
+        <!-- Add Ingredients Section -->
+        <h3 class="text-center mb-4">Add Ingredients</h3>
 
-                    <form method="POST" action="{% url 'inventory-view' %}">
-                        {% csrf_token %}
-                        <!-- Row for the table and card -->
-                        <div class="row">
-                            <!-- Ingredient Selection Table (left column) -->
-                            <div class="col-lg-8">
-                                <div class="table-container">
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Select</th>
-                                                <th>Ingredient Name</th>
-                                                <th>Quantity</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for ingredient in ingredients %}
-                                            <tr>
-                                                <td>
-                                                    <input type="checkbox" name="selected_ingredients"
-                                                        value="{{ ingredient.id }}">
-                                                </td>
-                                                <td>{{ ingredient.label }}</td>
-                                                <td>
-                                                    <input type="number" name="quantity_{{ ingredient.id }}" value="1"
-                                                        min="1">
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="3" class="text-center">No ingredients available.</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
+        <form method="POST" action="{% url 'inventory-view' %}">
+            {% csrf_token %}
+            <!-- Row for the table and card -->
+            <div class="row">
+                <!-- Ingredient Selection Table (left column) -->
+                <div class="col-lg-8">
+                    <div class="table-container">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th>Ingredient Name</th>
+                                    <th>Unit</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ingredient in ingredients %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="selected_ingredients" value="{{ ingredient.id }}">
+                                    </td>
+                                    <td>{{ ingredient.label }}</td>
+                                    <td>{{ ingredient.unit }}</td>
+                                    <td>
+                                        <input type="number" name="quantity_{{ ingredient.id }}" value="1" min="1">
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No ingredients available.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-                                <!-- Submit Button -->
-                                <div class="text-center mt-4">
-                                    <button type="submit" class="btn btn-silver">Manually add to Inventory</button>
-                                </div>
-                            </div>
+                    <!-- Submit Button -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-silver">Manually add to Inventory</button>
+                    </div>
+                </div>
 
-                            <!-- Card (right column) -->
-                            <div class="col-lg-4">
-                                <div class="card card-background card-background-mask-dark tilt" data-tilt=""
-                                    style="will-change: transform; transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);">
-                                    <div class="full-background"
-                                        style="background-image: url('https://www.theenglishhome.co.uk/_gatsby/file/2a78ced2aeb03c41f465a132185c6e75/26078_Armac-Martin-pantry-storage.jpg')">
-                                    </div>
-                                    <div class="card-body pt-7 text-center">
-                                        <div class="icon icon-lg up mb-3 mt-3">
-                                            <svg width="50px" height="50px" viewBox="0 0 42 42" version="1.1"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                <!-- SVG content -->
-                                            </svg>
-                                        </div>
-                                        <h2 class="text-white up mb-0">Or Capture a Snapshot of Your Pantry Instead</h2>
-                                        <a href=".//sections/elements/buttons.html" target="_blank"
-                                            class="btn btn-outline-white mt-5 up btn-round">Try our AI-based Ingredient
-                                            Detector</a>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Card (right column) -->
+                <div class="col-lg-4">
+                    <div class="card card-background card-background-mask-dark tilt" data-tilt=""
+                        style="will-change: transform; transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);">
+                        <div class="full-background"
+                            style="background-image: url('https://www.theenglishhome.co.uk/_gatsby/file/2a78ced2aeb03c41f465a132185c6e75/26078_Armac-Martin-pantry-storage.jpg')">
                         </div>
-                    </form>
+                        <div class="card-body pt-7 text-center">
+                            <div class="icon icon-lg up mb-3 mt-3">
+                                <svg width="50px" height="50px" viewBox="0 0 42 42" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <!-- SVG content -->
+                                </svg>
+                            </div>
+                            <h2 class="text-white up mb-0">Or Capture a Snapshot of Your Pantry Instead</h2>
+                            <a href=".//sections/elements/buttons.html" target="_blank"
+                                class="btn btn-outline-white mt-5 up btn-round">Try our AI-based Ingredient
+                                Detector</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </form>
+    </div>
+</div>
+
 
             <!-- Model Container -->
             <div id="model-container" style="width: 100%; height: 600px;"></div>

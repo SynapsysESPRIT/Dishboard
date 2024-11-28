@@ -42,7 +42,7 @@
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/static/css/nucleo-icons.css" rel="stylesheet">
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/static/css/nucleo-svg.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
-    <script type="text/javascript" src="/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=MEP68sOX8mIvuvOgXHuHjR06oLDpCbMzCu9bGIZazy-ABiPluGVLawqZWJ673NMbThN_-2YvtTSMih7CNAPg6bTBq7nxDfrN1_0n29ZDc6oHrthitHTBF1u7ZKW0WkJBX7D-WTdpCVQ--edGoxHOb9Mn5R1mBJgYt9YnwKNuiNCqmj4PU1KDnJnd4MGq9kH4Jit5dfSHEc5v10EZpyPsDhjj86l4OA-_3XDEcUOlkceejYEPIpPieXQjaUATg9I15tqsh6Virojo6I_76VPb2ax6baBi5mIz5HUEys0_Gs6znPjeU98M-0Cg340Csjehojs-9JELzm7NsZYeeSQVG7fNCBydX2Fbxgn7rCRFwYQUqnPVUU5FxEymDw2bt3lSfDw3r8RrGH1dbDpCl9MQdg-SECP4K7hhUOTyoSU-0zHFosOzH9tLN4V_QI9pa2t6" charset="UTF-8"></script><script src="https://ct.pinterest.com/static/ct/token_create.js"></script>
+    <script type="text/javascript" src="/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=_Jqw1cnrXDmnr2n7DbztwPz3IOa8MDfTMLNFYHZ22YO1VG1cwkFRmtkwD1xX9O6PhENMejQKXctyJxYNxGuSlUGVmQzbd0L9nQGeIN4pChumM1pZbbXRSvF9oI_eryjBvsCVvmUXU0yFXUZ60qxckMm9FTCXcj86eh2nlGM2dkn96mijJC_4PThfpGGyvX-IJYXe0IX24o6DHD9vZ4i_9QoyYRDsEXyL2yZXUmBW17cpUgkilEvjvaEWW6jyVFxfKSUMdaT7xhhY9iHbBsXZI75XjNMkgG77ZuZuV_Ou79c-o7pDweeSmJBixaODfBTTG0DCtFZBf2j7G3tLqXmhaNO3cKmEYQGWRxORWDo5S2cJFHwOZFR489-k_cEwXhdA3oRPxeXipmJup3W0_yflXTgYBPp1U_sqY9jt6nyXZeAFHKDgblF0Kc6Mttjo4vzC" charset="UTF-8"></script><script src="https://ct.pinterest.com/static/ct/token_create.js"></script>
     <script type="text/javascript" async=""
         src="https://www.googletagmanager.com/gtag/js?id=G-LMRL06STSS&amp;cx=c&amp;_slc=1"></script>
     <script async="" src="https://s.pinimg.com/ct/lib/main.5aecc8b1.js"></script>
@@ -25715,6 +25715,9 @@
 <br>
 <br>
 <br>
+<br>
+<br>
+
 <div class="container-fluid px-3">
     <div class="col-lg-4 col-md-6 px-sm-1 mt-md-0 mt-4">
         <div class="info-horizontal bg-light border-radius-xl p-5">
@@ -25732,6 +25735,8 @@
                     <button id="load-page">Charger la Page</button>
                 </div>
                 <center><span>Page <span id="page-num"></span> sur <span id="page-count"></span></span></center>
+               
+                
                 <script>
                     var url = '{{ item.piece_jointe_2.url }}';
                     var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -25801,13 +25806,13 @@
                         renderPage(pageNum);
                     });
                     // Sauvegarder la page actuelle dans localStorage
-document.getElementById('save-page').addEventListener('click', function() {
+  document.getElementById('save-page').addEventListener('click', function() {
     localStorage.setItem('savedPage', pageNum);
     alert('Page sauvegardée : ' + pageNum);
-});
+  });
 
-// Charger la page sauvegardée depuis localStorage
-document.getElementById('load-page').addEventListener('click', function() {
+ // Charger la page sauvegardée depuis localStorage
+    document.getElementById('load-page').addEventListener('click', function() {
     var savedPage = localStorage.getItem('savedPage');
     if (savedPage) {
         pageNum = parseInt(savedPage);
@@ -25816,8 +25821,54 @@ document.getElementById('load-page').addEventListener('click', function() {
     } else {
         alert('Aucune page sauvegardée.');
     }
-});
-                </script>
+  });
+ // Sauvegarder la page actuelle dans localStorage
+ document.getElementById('save-page').addEventListener('click', function() {
+    localStorage.setItem('savedPage', pageNum);
+    alert('Page sauvegardée : ' + pageNum);    
+ });
+ // Fonction pour charger l'historique des signets
+ function loadBookmarks() {
+    var bookmarksList = document.getElementById('bookmarks-list');
+    bookmarksList.innerHTML = ''; // Vider la liste avant de la remplir
+
+    // Récupérer les signets sauvegardés depuis localStorage
+    var savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+    savedBookmarks.forEach(function(bookmark) {
+        var bookmarkItem = document.createElement('li');
+        bookmarkItem.textContent = 'Page ' + bookmark;
+        bookmarkItem.setAttribute('data-page', bookmark);
+        
+        // Ajouter un événement de clic pour charger la page sauvegardée
+        bookmarkItem.addEventListener('click', function() {
+            pageNum = parseInt(this.getAttribute('data-page'));
+            queueRenderPage(pageNum);
+        });
+
+        bookmarksList.appendChild(bookmarkItem);
+    });
+ }
+
+ // Sauvegarder la page actuelle dans localStorage
+ document.getElementById('save-page').addEventListener('click', function() {
+    var savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    
+    if (!savedBookmarks.includes(pageNum)) {
+        savedBookmarks.push(pageNum); // Ajouter la page si elle n'est pas déjà sauvegardée
+        localStorage.setItem('bookmarks', JSON.stringify(savedBookmarks));
+        alert('Page sauvegardée : ' + pageNum);
+        loadBookmarks(); // Mettre à jour l'affichage des signets
+    } else {
+        alert('Cette page est déjà sauvegardée.');
+    }
+  });
+
+ // Charger les signets au chargement de la page
+ window.onload = function() {
+    loadBookmarks();
+ };
+ </script>
                 {% else %}
                 <p>PDF Attachment not found.</p>
                 {% endif %}
@@ -25828,8 +25879,8 @@ document.getElementById('load-page').addEventListener('click', function() {
                 <a href="{% url 'list' %}" class="back-link">Go back</a>
             </div>
         </div>
-    </div>
-</div>
+     </div>
+     </div>
 
 
                 <!-- END Blogs w/ 3 rows w/ image on left & title, text, author on end-->
@@ -25838,8 +25889,17 @@ document.getElementById('load-page').addEventListener('click', function() {
 
                 <!-- END Blogs w/ 3 rows w/ image on left & title, text, author on end-->
 
+                 
+                <div class="col-lg-2">
+                    <div class="info-horizontal bg-light border-radius-xl p-3 sticky-top" style="top: 20px; max-height: 400px; overflow-y: auto;">
+                        <div class="bookmarks">
+                            <h5 class="mb-3">Historique des Pages Sauvegardées</h5>
+                            <ul id="bookmarks-list" class="list-unstyled"></ul>
+                        </div>
+                    </div>
+                </div>
 
-        
+                
     
     <!-- ---- END FOOTER 2 dark w/ bg image 5 cols & subscribe area & social---- -->
     <!--   Core JS Files   -->

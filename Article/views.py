@@ -10,20 +10,24 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 # Create your views here.
 from .models import Article
+from User.models import Professional
 from django.shortcuts import render, get_object_or_404, redirect
 
 def list(request):
-     
     article = Article.objects.all()
-    
-    return render(request ,'Article/list.html' , {"data" :article})
-class AddArticle(CreateView):
-    
-    model=Article
-    template_name="Article/add.html"
-    
-    form_class=ArticleModelForm
+    is_professional = isinstance(request.user, Professional) if request.user.is_authenticated else False
+    return render(request, 'Article/list.html', {"data": article, "is_professional": is_professional})
+
+class AddArticle(LoginRequiredMixin, CreateView):
+    model = Article
+    template_name = "Article/add.html"
+    form_class = ArticleModelForm
     success_url = reverse_lazy('blog')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not isinstance(request.user, Professional):
+            return HttpResponseForbidden("Unauthorized")
+        return super().dispatch(request, *args, **kwargs)
 
 def detailsClass(request):
     id = request.GET.get('id')
@@ -39,34 +43,40 @@ def detailsClass(request):
    #  form_class = ArticleModelForm
    # success_url = reverse_lazy('list')
 def updateClass(request):
-    # Récupère l'ID passé dans l'URL
-    article_id = request.GET.get('id')  # Utilisation de 'id' comme paramètre de l'URL
-    if not article_id or not article_id.isdigit():  # Vérifier si l'ID est manquant ou invalide
+    if not isinstance(request.user, Professional):
+        return HttpResponse("Unauthorized", status=403)
+
+    article_id = request.GET.get('id')
+    if not article_id or not article_id.isdigit():
         return HttpResponse("Invalid or missing ID", status=400)
 
-    # Récupère l'article en fonction de l'ID
     article = get_object_or_404(Article, id=article_id)
 
-    # Traite la mise à jour des champs lorsque la méthode est POST
     if request.method == 'POST':
-        # Met à jour les champs de l'article directement avec les données POST
-        article.titre = request.POST.get('titre', article.titre)  # Utilisez les bons noms de champs
-        article.contenu = request.POST.get('contenu', article.contenu)  # Utilisez les bons noms de champs
-        # Ajoutez d'autres champs à mettre à jour ici...
+        article.titre = request.POST.get('titre', article.titre)
+        article.contenu = request.POST.get('contenu', article.contenu)
+        article.save()
+        return redirect('blog')
 
-        article.save()  # Sauvegarde les modifications
-        return redirect('blog')  # Redirige vers la page du blog après la mise à jour
-
-    # Affiche l'article pour la mise à jour (même si vous n'utilisez pas de formulaire)
     return render(request, 'Article/update.html', {'article': article})
         
+from django.http import HttpResponseForbidden
+
 class DeleteArticle(DeleteView):
     model = Article
-    template_name = "Article/delete.html"  # Template pour la confirmation de suppression
+    template_name = "Article/delete.html"
     success_url = reverse_lazy('blog')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not isinstance(request.user, Professional):
+            return HttpResponseForbidden("Unauthorized")
+        return super().dispatch(request, *args, **kwargs)
 
 
 
 def blog(request):
-    article = Article.objects.all()
-    return render(request, 'Article/blog-posts.html', {"data": article})
+    article = Article.objects.all()  # Get all articles
+    is_professional = isinstance(request.user, Professional) if request.user.is_authenticated else False
+    return render(request, 'Article/blog-posts.html', {"data": article, "is_professional": is_professional})
+
+

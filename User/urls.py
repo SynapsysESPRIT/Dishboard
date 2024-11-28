@@ -27,8 +27,10 @@ urlpatterns = [
 
     path('logout/', LogoutView.as_view(), name='logout'),  # Adds the logout route
 
-    path('verify-email/<str:token>/', verify_email, name='verify_email'),
+    #path('verify-email/<str:token>/', verify_email, name='verify_email'),
 
-    
+
+    path('verify-code/', views.verify_verification_code, name='verify_verification_code'),
+    path('verify-email/<uuid:token>/', views.verify_email, name='verify_email'),
     
 ]

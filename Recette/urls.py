@@ -11,5 +11,5 @@ urlpatterns = [
     # Pour FBV
     # path('ajouter_recette/', ajouter_recette, name='ajouter_recette'),
 
-    # Autres URL ici...
+
 ]

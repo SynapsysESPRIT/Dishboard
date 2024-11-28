@@ -5,6 +5,7 @@ from .forms import ClientForm, ProfessionalForm, ProviderForm, UserForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 
 
 # List views
@@ -33,13 +34,16 @@ def list_admins(request):
 def user_detail_update(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
+        if 'send_verification_code' in request.POST:
+            send_verification_code(user, request)
+            return HttpResponse("Verification code sent to your email.")
         form = UserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('user_detail_update', user_id=user.id)
     else:
         form = UserForm(instance=user)
-    return render(request, 'User/settings.html', {'user': user})
+    return render(request, 'User/settings.html', {'user': user, 'form': form})
 
 def add_user(request):
     form = UserForm(request.POST or None)
@@ -106,30 +110,45 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
 
+
+def verify_verification_code(request):
+    if request.method == 'POST':
+        code = request.POST.get('verification_code')
+        try:
+            user = User.objects.get(verification_code=code)
+            if user:
+                user.is_verified = True
+                user.verification_code = None
+                user.save()
+                return HttpResponse("Your email has been verified successfully!")
+        except User.DoesNotExist:
+            return HttpResponse("Invalid verification code.")
+    return render(request, 'User/verify_code.html')
+
 def send_verification_email(user, request):
-    token = user.generate_verification_token()
+    user.generate_verification_code()
     user.save()
     
     current_site = get_current_site(request)
     verification_link = request.build_absolute_uri(
-        reverse('verify_email', args=[token])
+        reverse('verify_email', args=[user.email_verification_token])
     )
 
     send_mail(
         'Verify Your Email Address',
-        f'Hi {user.username},\n\nPlease verify your email address by clicking the link below:\n{verification_link}\n\nThank you!',
+        f'Hi {user.username},\n\nPlease verify your email address by clicking the link below:\n{verification_link}\n\nAlternatively, you can use the verification code: {user.verification_code}\n\nThank you!',
         settings.EMAIL_HOST_USER,
         [user.email],
         fail_silently=False,
     )
 
+
 def verify_email(request, token):
     try:
-        user = User.objects.get(email_verification_token=token)
-        if user:
-            user.is_verified = True
-            user.email_verification_token = None
-            user.save()
-            return HttpResponse("Your email has been verified successfully!")
+        user = User.objects.get(email_verification_token=token, is_verified=False)
+        user.is_verified = True
+        user.verification_code = None  # Clear the code after verification
+        user.save()
+        return HttpResponse("Your email has been verified successfully!")
     except User.DoesNotExist:
-        return HttpResponse("Invalid or expired token.")
+        return HttpResponse("Invalid or expired verification link.")

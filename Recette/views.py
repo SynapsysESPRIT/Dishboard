@@ -16,8 +16,15 @@ class RecetteCreateView(LoginRequiredMixin, CreateView):
     form_class = RecetteeModelForm
     template_name = 'Recette/ajouter.html'
     success_url = reverse_lazy('liste_recettes')
-    
 
+    def form_valid(self, form):
+        form.instance.client = self.request.user.client
+        return super().form_valid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not hasattr(request.user, 'client'):
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 
 @login_required

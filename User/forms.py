@@ -17,7 +17,7 @@ class ClientForm(UserCreationForm):
 class ProfessionalForm(UserCreationForm):
     class Meta:
         model = Professional
-        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'age', 'gender', 'address', 'phone', 'years_of_experience', 'diploma', 'cin', 'matricule']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'age', 'gender', 'address', 'phone', 'years_of_experience', 'diploma', 'cin']
 
 class ProviderForm(UserCreationForm):
     class Meta:

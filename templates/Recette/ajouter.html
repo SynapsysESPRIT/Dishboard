@@ -18906,12 +18906,10 @@
                                 <label for="id_difficulty_level">Difficulty level:</label>
                                 <select name="difficulty_level" required id="id_difficulty_level">
                                     <option value="">---------</option>
-                                    <option value="Facile" {% if object.difficulty_level=="Facile" %}selected{% endif
-                                        %}>Facile</option>
-                                    <option value="Moyen" {% if object.difficulty_level=="Moyen" %}selected{% endif %}>
+                                    <option value="Facile" {% if object.difficulty_level == "Facile" %}selected{% endif %}>Facile</option>
+                                    <option value="Moyen" {% if object.difficulty_level == "Moyen" %}selected{% endif %}>
                                         Moyen</option>
-                                    <option value="Difficile" {% if object.difficulty_level=="Difficile" %}selected{%
-                                        endif %}>Difficile</option>
+                                    <option value="Difficile" {% if object.difficulty_level == "Difficile" %}selected{% endif %}>Difficile</option>
                                 </select>
 
                                 <span class="helptext">level of difficulty: Facile, Moyen, Difficile</span>

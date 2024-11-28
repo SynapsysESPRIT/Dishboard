@@ -37,6 +37,7 @@ class ClientAdmin(UserAdmin):
         ('Client Info', {'fields': ('weight', 'height', 'bmi')}),
     )
 
+
 # Professional Admin
 class ProfessionalAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'years_of_experience', 'diploma', 'cin', 'matricule')

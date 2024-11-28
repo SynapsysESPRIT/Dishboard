@@ -1,0 +1,8 @@
+<!-- templates/User/add_provider.html -->
+<h1>Add Provider</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'list_providers' %}">Back to Provider List</a>

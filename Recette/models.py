@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.core.exceptions import ValidationError
+from User.models import Client
 import os
 
 # Custom validator to limit file size and extension
@@ -27,6 +28,7 @@ class Recette(models.Model):
             )
         ]
     )
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='recettes', null=True)
     description = models.TextField()
     inventory = models.TextField(help_text="Liste d'ingrédients")
     instructions = models.TextField()

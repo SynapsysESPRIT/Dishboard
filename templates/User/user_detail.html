@@ -1,0 +1,53 @@
+<!-- templates/User/user_detail.html -->
+
+<h1>{{ user.username }}'s Details</h1>
+
+<!-- Displaying standard fields -->
+<p>Email: {{ user.email }}</p>
+<p>First Name: {{ user.first_name }}</p>
+<p>Last Name: {{ user.last_name }}</p>
+
+<!-- Displaying custom fields, adjust based on your model -->
+{% if user.age %}
+    <p>Age: {{ user.age }}</p>
+{% endif %}
+{% if user.gender %}
+    <p>Gender: {{ user.gender }}</p>
+{% endif %}
+{% if user.address %}
+    <p>Address: {{ user.address }}</p>
+{% endif %}
+{% if user.phone %}
+    <p>Phone: {{ user.phone }}</p>
+{% endif %}
+{% if user.weight %}
+    <p>Weight: {{ user.weight }}</p>
+{% endif %}
+{% if user.height %}
+    <p>Height: {{ user.height }}</p>
+{% endif %}
+{% if user.bmi %}
+    <p>BMI: {{ user.bmi }}</p>
+{% endif %}
+{% if user.years_of_experience %}
+    <p>Years of Experience: {{ user.years_of_experience }}</p>
+{% endif %}
+{% if user.diploma %}
+    <p>Diploma: {{ user.diploma }}</p>
+{% endif %}
+{% if user.cin %}
+    <p>CIN: {{ user.cin }}</p>
+{% endif %}
+{% if user.matricule %}
+    <p>Matricule: {{ user.matricule }}</p>
+{% endif %}
+{% if user.company_name %}
+    <p>Company Name: {{ user.company_name }}</p>
+{% endif %}
+{% if user.tax_code %}
+    <p>Tax Code: {{ user.tax_code }}</p>
+{% endif %}
+
+<!-- Links for further actions -->
+<a href="{% url 'edit_user' user.id %}">Edit User</a>
+<a href="{% url 'list_users' %}">Back to Users List</a>

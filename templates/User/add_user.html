@@ -1,0 +1,9 @@
+<!-- templates/User/add_user.html and templates/User/edit_user.html -->
+
+<h1>{% if user %}Add User{% else %}Add New User{% endif %}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'list_users' %}">Back to Users List</a>

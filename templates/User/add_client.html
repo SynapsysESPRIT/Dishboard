@@ -1,0 +1,45 @@
+<!-- templates/User/add_client.html -->
+<h1>Add Client</h1>
+<form method="post">
+    {% csrf_token %}
+    <form method="post" action="{% url 'add_client' %}">
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="password1">Password:</label>
+    <input type="password" id="password1" name="password1" required>
+    
+    <label for="password2">Confirm Password:</label>
+    <input type="password" id="password2" name="password2" required>
+    
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name">
+    
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name">
+    
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age">
+    
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+    
+    <label for="weight">Weight:</label>
+    <input type="number" id="weight" name="weight">
+    
+    <label for="height">Height:</label>
+    <input type="number" id="height" name="height">
+    
+    <button type="submit">Add Client</button>
+</form>
+
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'list_clients' %}">Back to Client List</a>

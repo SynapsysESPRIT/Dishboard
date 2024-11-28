@@ -1,0 +1,10 @@
+<!-- templates/User/list_professionals.html -->
+<h1>Professional List</h1>
+<a href="{% url 'sign-up-prof' %}">Add New Professional</a>
+<ul>
+    {% for professional in professionals %}
+    <li>
+        <a href="{% url 'user_detail_update' professional.id %}">{{ professional.username }}</a> - {{ professional.email }}
+    </li>
+    {% endfor %}
+</ul>

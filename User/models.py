@@ -29,6 +29,10 @@ class User(AbstractUser):
         unique=True,
          #validators=[EmailValidator(message="Enter a valid email address.")]
     )
+    last_name = models.CharField(max_length=150, blank=True)
+    first_name = models.CharField(max_length=150, blank=True)
+    
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'User'
@@ -82,6 +86,7 @@ class Provider(User):
     company_name = models.CharField(max_length=255)
     tax_code = models.CharField(max_length=20)
     is_approved = models.BooleanField(default=False)  # Approval field
+    
 
     class Meta:
         verbose_name = 'Provider'

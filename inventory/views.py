@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+
 from django.contrib.auth.models import User
-from .models import Ingredient, Inventory, InventoryIngredient
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from User.models import User
+from User.models import Client
 from .models import Ingredient, Inventory, InventoryIngredient
 
 def inventory_view(request):
@@ -21,13 +21,15 @@ def inventory_view(request):
     else:
         ingredients = Ingredient.objects.all()
 
-    # Ensure the user is logged in (aziz for testing purposes)
-    if not request.user.is_authenticated:
-        user = User.objects.get(username='aziz')
-        login(request, user)  # Log in the user automatically if not authenticated
+    # Ensure the user is a client
+    if not hasattr(request.user, 'client'):
+        return redirect('some-error-page')  # Redirect to an error page or show an error message
 
     # Get the user's inventory
     user_inventory = InventoryIngredient.objects.filter(inventory__user=request.user)
+
+    # Get the member since date
+    member_since = request.user.date_joined
 
     if request.method == 'POST':
         # Handle adding selected ingredients to the inventory
@@ -81,5 +83,6 @@ def inventory_view(request):
         'ingredients': ingredients,
         'user_inventory': user_inventory,
         'categories': categories,
-        'selected_category': selected_category
+        'selected_category': selected_category,
+        'member_since': member_since
     })

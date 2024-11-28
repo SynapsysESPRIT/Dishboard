@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator, RegexVa
 from django.core.exceptions import ValidationError
 from User.models import Client
 import os
-
+import json
 # Custom validator to limit file size and extension
 def validate_image_file(image):
     # Validate file size (2 MB max)
@@ -28,6 +28,26 @@ class Recette(models.Model):
             )
         ]
     )
+
+    description = models.TextField()
+    # Vos autres champs...
+
+    favorites = models.TextField(blank=True, default="[]")  # Stocke les IDs des utilisateurs sous forme de liste JSON
+
+    def is_favorite(self, client):
+        """Vérifie si l'utilisateur a ajouté cette recette aux favoris."""
+        favorite_ids = json.loads(self.favorites)
+        return client.id in favorite_ids
+
+    def toggle_favorite(self, client):
+        """Ajoute ou retire l'utilisateur des favoris."""
+        favorite_ids = json.loads(self.favorites)
+        if client.id in favorite_ids:
+            favorite_ids.remove(client.id)
+        else:
+            favorite_ids.append(client.id)
+        self.favorites = json.dumps(favorite_ids)
+        self.save()
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='recettes', null=True)
     description = models.TextField()
     inventory = models.TextField(help_text="Liste d'ingrédients")
@@ -49,7 +69,6 @@ class Recette(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.FileField(upload_to='images/', blank=True, null=True, validators=[validate_image_file])
-
     # Methods for the model
     def enregistrer(self):
         # Custom logic for saving the recette

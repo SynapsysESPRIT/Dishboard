@@ -37,68 +37,99 @@ class UpdateConference(UpdateView):
     template_name="Recette/ajouter.html"
     form_class=RecetteeModelForm
     success_url=reverse_lazy('liste_recettes')
-    
+
 class DeleteRecette(DeleteView):
-    
+
     model=Recette
     template_name="Recette/delete.html"
     success_url=reverse_lazy('liste_recettes')
 
+
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import Recette
+
 @login_required
 def liste_recettes(request):
-    # Récupérer toutes les recettes par défaut
-    recettes = Recette.objects.all()
-   
-    # Filtrer par titre si le paramètre est présent
+    # Retrieve the logged-in client's recipes
+    client = request.user.client  # Assuming `Client` is related to `User` as `request.user.client`
+    client_recettes = Recette.objects.filter(client=client)
+
+    # Recipes from other clients
+    other_recettes = Recette.objects.exclude(client=client)
+
+    # Apply filters for search
     title_query = request.GET.get('title')
     if title_query:
-        recettes = recettes.filter(titre__icontains=title_query)
+        client_recettes = client_recettes.filter(titre__icontains=title_query)
+        other_recettes = other_recettes.filter(titre__icontains=title_query)
 
-    # Filtrer par niveau de difficulté si le paramètre est présent
     difficulty = request.GET.get('difficulty')
     if difficulty:
-        recettes = recettes.filter(difficulty_level=difficulty)
+        client_recettes = client_recettes.filter(difficulty_level=difficulty)
+        other_recettes = other_recettes.filter(difficulty_level=difficulty)
 
-    # Filtrer par type de cuisine si le paramètre est présent
     cuisine = request.GET.get('cuisine')
     if cuisine:
-        recettes = recettes.filter(cuisine__icontains=cuisine)
+        client_recettes = client_recettes.filter(cuisine__icontains=cuisine)
+        other_recettes = other_recettes.filter(cuisine__icontains=cuisine)
 
-    # Filtrer par nombre de portions si le paramètre est présent
     servings = request.GET.get('servings')
     if servings:
         try:
             servings = int(servings)
-            recettes = recettes.filter(servings=servings)
+            client_recettes = client_recettes.filter(servings=servings)
+            other_recettes = other_recettes.filter(servings=servings)
         except ValueError:
-            pass  # Ignorer le filtre si la conversion échoue
+            pass
 
-    # Filtrer par temps de cuisson minimum et maximum si les paramètres sont présents
     min_cook_time = request.GET.get('min_cook_time')
     max_cook_time = request.GET.get('max_cook_time')
     if min_cook_time:
         try:
             min_cook_time = int(min_cook_time)
-            recettes = recettes.filter(cook_time__gte=min_cook_time)
+            client_recettes = client_recettes.filter(cook_time__gte=min_cook_time)
+            other_recettes = other_recettes.filter(cook_time__gte=min_cook_time)
         except ValueError:
             pass
     if max_cook_time:
         try:
             max_cook_time = int(max_cook_time)
-            recettes = recettes.filter(cook_time__lte=max_cook_time)
+            client_recettes = client_recettes.filter(cook_time__lte=max_cook_time)
+            other_recettes = other_recettes.filter(cook_time__lte=max_cook_time)
         except ValueError:
             pass
 
-    paginator = Paginator(recettes, 6)  # 3 items per page
+    # Paginate recipes from other clients
+    paginator = Paginator(other_recettes, 6)  # 6 items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
     context = {
-        'recettes': page_obj,  # Only pass the paginated recipes
-        'page_obj': page_obj
+        'client_recettes': client_recettes,  # Recipes for the logged-in client
+        'other_recettes': page_obj,         # Paginated recipes from other clients
+        'page_obj': page_obj,
     }
 
-    # Return the recipes filtered to the template
     return render(request, 'recette/list.html', context)
 
-    # Renvoyer les recettes filtrées au template
-   
+
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def toggle_favorite(request, recette_id):
+    recette = get_object_or_404(Recette, id=recette_id)
+    recette.toggle_favorite(request.client)
+    return JsonResponse({'is_favorite': recette.is_favorite(request.client)})
+
+
+@login_required
+def favorites_list(request):
+    favorites = Recette.objects.filter(favorites__contains=f'"{request.client.id}"')
+    html = render_to_string('list.html', {'favorites': favorites}, request=request)
+    return JsonResponse({'html': html})
+

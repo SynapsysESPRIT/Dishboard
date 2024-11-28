@@ -9586,10 +9586,10 @@
       </div>
 
       <!-- Formulaire de filtres -->
-     
-
+     <button id="show-user-recipes" class="btn btn-primary">Afficher mes recettes</button>
+<h3>Recettes des autres utilisateurs</h3>
       <!-- Cartes de recettes -->
-      {% for recette in recettes %}
+       {% for recette in other_recettes %}
       <div class="col-lg-4 col-md-6">
         <div class="card card-blog card-plain">
           <div class="position-relative">
@@ -9617,8 +9617,108 @@
       </div>
       {% endfor %}
     </div>
+<div id="user-recipes" style="display: none;">
+        <h3>Mes Recettes</h3>
+        {% for recette in client_recettes %}
+<div class="col-lg-4 col-md-6">
+        <div class="card card-blog card-plain">
+          <div class="position-relative">
+            <a class="d-block blur-shadow-image">
 
-    <!-- Pagination -->
+            </a>
+
+          </div>
+                  {% if recette.image %}
+          <img src="{{ recette.image.url }}" alt="{{ recette.titre }}" class="img-fluid shadow" style="width: 100%; height: 350px; object-fit: cover; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transition: transform 0.3s ease, filter 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.filter='brightness(0.8)'" onmouseout="this.style.transform='scale(1)'; this.style.filter='brightness(1)'">
+{% else %}
+          <div class="no-image-placeholder d-flex align-items-center justify-content-center" style="height: 350px; background-color: #f8f9fa; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <i class="fas fa-image text-muted" style="font-size: 4rem;"></i>
+            <p class="text-muted mb-0 ml-2">No images available</p>
+          </div>
+{% endif %}
+            <div class="card-body px-1 pt-3"
+            <p class="text-gradient text-dark mb-2 text-sm"> Cuisine:{{ recette.cuisine }} • {{ recette.servings }} Portions • {{ recette.cook_time }} min</p>            <a href="{% url 'recette_detail' pk=recette.pk %}">              <h5>{{ recette.titre }}</h5>
+            </a>
+            <p>{{ recette.description|truncatewords:15 }}</p>
+            <p class="text-gradient text-dark mb-2 text-sm">Difficulty : {{ recette.difficulty_level }}</p>
+            <button
+                    class="favorite-btn btn {{ 'btn-danger' if recette.is_favorite(request.user) else 'btn-outline-secondary' }}"
+                    data-recette-id="{{ recette.id }}">
+                {% if recette.is_favorite(request.client) %}
+                    Retirer des Favoris
+                {% else %}
+                    Ajouter aux Favoris
+                {% endif %}
+            </button>
+            <a href="{% url 'recette_detail' pk=recette.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
+            <a href="{% url 'deleteClass' recette.id %}" class="btn btn-outline-primary btn-sm">Delete</a>
+            <a href="{% url 'updateClass' recette.id %}" class="btn btn-outline-primary btn-sm"> Update</a>
+          </div>
+        </div>
+      </div>
+
+        {% endfor %}
+    </div>
+          <button id="show-favorites-btn" class="btn btn-secondary">Afficher les Favoris</button>
+
+          <!-- Barre latérale des favoris -->
+          <div id="favorites-sidebar" class="favorites-sidebar" style="display: none;">
+              <div class="favorites-header">
+                  <h5>Mes Favoris</h5>
+                  <button id="close-favorites-btn" class="btn-close">&times;</button>
+              </div>
+              <div id="favorites-content">
+                  <!-- La liste des favoris sera chargée ici -->
+              </div>
+          </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.favorite-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const recetteId = this.dataset.recetteId;
+
+                fetch(`/toggle-favorite/${recetteId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',  // Inclure le token CSRF
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.is_favorite) {
+                            this.classList.remove('btn-outline-secondary');
+                            this.classList.add('btn-danger');
+                            this.textContent = 'Retirer des Favoris';
+                        } else {
+                            this.classList.remove('btn-danger');
+                            this.classList.add('btn-outline-secondary');
+                            this.textContent = 'Ajouter aux Favoris';
+                        }
+                    });
+            });
+        });
+    });
+
+</script>
+
+
+          <script>
+    // Script pour afficher/masquer les recettes de l'utilisateur
+    document.getElementById('show-user-recipes').addEventListener('click', function() {
+        const userRecipes = document.getElementById('user-recipes');
+        const otherRecipes = document.getElementById('other-recipes');
+        if (userRecipes.style.display === 'none') {
+            userRecipes.style.display = 'block';
+            otherRecipes.style.display = 'none';
+        } else {
+            userRecipes.style.display = 'none';
+            otherRecipes.style.display = 'block';
+        }
+    });
+</script>
+
+
+          <!-- Pagination -->
     <nav aria-label="Pagination">
       <ul class="pagination justify-content-center mt-4">
         {% if recettes.has_previous %}

@@ -128,7 +128,7 @@ def verify_verification_code(request):
 def send_verification_email(user, request):
     user.generate_verification_code()
     user.save()
-    
+
     current_site = get_current_site(request)
     verification_link = request.build_absolute_uri(
         reverse('verify_email', args=[user.email_verification_token])

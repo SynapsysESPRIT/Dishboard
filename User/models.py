@@ -7,11 +7,11 @@ import uuid
 # Base User model
 class User(AbstractUser):
     is_verified = models.BooleanField(default=False)
-    email_verification_token = models.CharField(max_length=64, null=True, blank=True)
+    email_verification_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    verification_code = models.CharField(max_length=6, null=True, blank=True)  # Verification code field
     age = models.PositiveIntegerField(
-        null=True, 
-        blank=True, 
-         #validators=[MinValueValidator(0), MaxValueValidator(120)]
+        null=True,
+        blank=True,
     )
     gender = models.CharField(
         max_length=10,
@@ -24,15 +24,13 @@ class User(AbstractUser):
         max_length=15,
         null=True,
         blank=True,
-        # validators=[RegexValidator(r'^\+?1?\d{9,15}$', message="Enter a valid phone number.")]
     )
     email = models.EmailField(
         unique=True,
-         #validators=[EmailValidator(message="Enter a valid email address.")]
     )
     last_name = models.CharField(max_length=150, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
-    
+
     date_joined = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -41,8 +39,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
     def generate_verification_token(self):
         self.email_verification_token = get_random_string(64)
+
+    def generate_verification_code(self):
+        self.verification_code = get_random_string(length=6, allowed_chars='0123456789')
 
 # Client model inheriting from User
 class Client(User):
@@ -98,3 +100,14 @@ class Admin(User):
     class Meta:
         verbose_name = 'Admin'
         verbose_name_plural = 'Admins'
+
+from django.shortcuts import redirect
+
+class RequireVerificationMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.user.is_authenticated and not request.user.is_verified:
+            return redirect('verify_email_code')
+        return self.get_response(request)

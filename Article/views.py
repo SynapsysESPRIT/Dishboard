@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from .models import Article
 from User.models import Professional
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseForbidden
 
 def list(request):
     article = Article.objects.all()
@@ -60,8 +61,6 @@ def updateClass(request):
 
     return render(request, 'Article/update.html', {'article': article})
         
-from django.http import HttpResponseForbidden
-
 class DeleteArticle(DeleteView):
     model = Article
     template_name = "Article/delete.html"

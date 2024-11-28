@@ -15,6 +15,35 @@
 <html lang="en" itemscope itemtype="http://schema.org/WebPage">
 
 <head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+
+  <!-- Open Graph / Facebook -->
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="recipe" />
+<meta property="og:title" content="{{ publication.recette.titre }}" />
+<meta property="og:description" content="{{ publication.recette.description }}" />
+<meta property="og:image" content="{{ publication.recette.image.url }}" />
+<meta property="og:site_name" content="Dishboard Recipes" />
+<meta property="og:cooking_time" content="{{ publication.recette.cook_time }} minutes" />
+<meta property="og:cuisine" content="{{ publication.recette.cuisine }}" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ publication.recette.titre }}" />
+<meta name="twitter:description" content="{{ publication.recette.description }}" />
+<meta name="twitter:image" content="{{ publication.recette.image.url }}" />
+<meta name="twitter:label1" content="Cooking Time" />
+<meta name="twitter:data1" content="{{ publication.recette.cook_time }} minutes" />
+<meta name="twitter:label2" content="Difficulty" />
+<meta name="twitter:data2" content="{{ publication.recette.difficulty_level }}" />
+
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
@@ -1392,7 +1421,9 @@
   </nav>
   <!-- End Navbar -->
   <!-- -------- START HEADER 1 w/ text and image on right ------- -->
+</div>
   <header>
+    <div class="publication-content">
     <div class="page-header min-vh-75">
       <div class="oblique position-absolute top-0 h-100 d-md-block d-none">
         <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 border-radius-lg border-top-start-radius-0 ms-n6" style="background-image: url('{% static 'img/podcast/header-image.jpeg' %}')"></div>
@@ -1490,13 +1521,752 @@
             </div>
           </div>
         </div>
+        <div class="d-flex justify-content-center mt-5 mb-4">
+          <a href="{% url 'export_publication_pdf' publication.id %}" class="btn btn-lg export-btn">
+              <span class="btn-inner--icon">
+                  <i class="fas fa-file-pdf fa-bounce me-2"></i>
+              </span>
+              <span class="btn-inner--text">Download Recipe PDF</span>
+          </a>
+      </div>
+      
+      <style>
+      .export-btn {
+          background: linear-gradient(310deg, #2152ff 0%, #21d4fd 100%);
+          color: white;
+          border-radius: 50px;
+          padding: 15px 30px;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(33, 82, 255, 0.3);
+      }
+      
+      .export-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(33, 82, 255, 0.4);
+          color: white;
+      }
+      
+      .export-btn:active {
+          transform: translateY(1px);
+      }
+      
+      .export-btn i {
+          font-size: 1.2rem;
+      }
+      </style>
+      
+      
+      
+      <script>
+      function downloadPDF() {
+    const element = document.querySelector('.publication-content');
+    
+    // Configure PDF settings
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `publication-${Date.now()}.pdf`,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+            logging: true
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+    };
 
+    // Show loading indicator
+    Swal.fire({
+        title: 'Creating PDF',
+        html: 'This may take a few seconds...',
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Generate and download PDF
+    html2pdf()
+        .set(opt)
+        .from(element)
+        .save()
+        .then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'PDF Downloaded Successfully!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+}
+
+
+      </script>
+      
+      
+      
+        <div class="social-share-section">
+          <div class="share-card glass-effect">
+              <div class="share-header">
+                  <i class="fas fa-share-alt fa-2x text-primary animate__animated animate__pulse animate__infinite"></i>
+                  <h4 class="mb-0 ms-3">Share this Publication</h4>
+              </div>
+              
+              <div class="share-buttons">
+                  <!-- Facebook -->
+                  <button onclick="sharePublication('facebook')" class="share-btn facebook-btn">
+                      <div class="btn-content">
+                          <i class="fab fa-facebook-f"></i>
+                          <span>Facebook</span>
+                      </div>
+                      <span class="share-count">{{ publication.facebook_shares }}</span>
+                  </button>
+                  
+                  <!-- Twitter -->
+                  <button onclick="sharePublication('twitter')" class="share-btn twitter-btn">
+                      <div class="btn-content">
+                          <i class="fab fa-twitter"></i>
+                          <span>Twitter</span>
+                      </div>
+                      <span class="share-count">{{ publication.twitter_shares }}</span>
+                  </button>
+                  
+                  <!-- LinkedIn -->
+                  <button onclick="sharePublication('linkedin')" class="share-btn linkedin-btn">
+                      <div class="btn-content">
+                          <i class="fab fa-linkedin-in"></i>
+                          <span>LinkedIn</span>
+                      </div>
+                      <span class="share-count">{{ publication.linkedin_shares }}</span>
+                  </button>
+                  
+                  <!-- WhatsApp -->
+                  <button onclick="sharePublication('whatsapp')" class="share-btn whatsapp-btn">
+                      <div class="btn-content">
+                          <i class="fab fa-whatsapp"></i>
+                          <span>WhatsApp</span>
+                      </div>
+                      <span class="share-count">{{ publication.whatsapp_shares }}</span>
+                  </button>
+              </div>
+              
+              <div class="share-stats">
+                  <div class="total-shares-card">
+                      <i class="fas fa-chart-line text-success"></i>
+                      <span class="total-shares">{{ publication.share_count }}</span>
+                      <span class="text-muted">Total Shares</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Rating Section -->
+<div class="rating-section glass-effect p-4 rounded-4 mb-4">
+  <h5 class="mb-3"><i class="fas fa-star text-warning"></i> Rate this Publication</h5>
+  
+  <div class="stars-container mb-3 d-flex gap-2">
+      {% for i in "12345" %}
+      <i class="fas fa-star fa-2x star-rating cursor-pointer" data-rating="{{ forloop.counter }}"></i>
+      {% endfor %}
+      <span class="ms-2 average-rating">({{ average_rating|default:"0" }})</span>
+  </div>
+  
+  <div class="like-dislike-container mb-3">
+    <button class="btn btn-like {% if user_rating.like %}active{% endif %}" onclick="toggleLike(this)">
+      <i class="fas fa-heart"></i>
+          <span class="like-count">{{ like_count }}</span>
+      </button>
+      <button class="btn btn-outline-danger btn-dislike {% if user_rating and not user_rating.like %}active{% endif %}">
+          <i class="fas fa-thumbs-down"></i>
+      </button>
+  </div>
+
+  <div class="review-container">
+      <textarea class="form-control rich-editor" rows="3" placeholder="Write your review here..."></textarea>
+      <button class="btn btn-primary mt-3 submit-rating">
+          <i class="fas fa-paper-plane me-2"></i>Submit Rating
+      </button>
+  </div>
+</div>
+
+<div class="reviews-section mt-4">
+  <h5><i class="fas fa-comments"></i> User Reviews</h5>
+  <div class="reviews-container">
+    {% for rating in publication.ratings.all %}
+    <div class="review-card glass-effect p-3 mb-3 rounded-3" data-rating-id="{{ rating.id }}">
+        <div class="d-flex align-items-center mb-2">
+            <span class="user-name me-3">{{ rating.user.username }}</span>
+            <div class="stars-display">
+                {% for i in "12345" %}
+                <i class="fas fa-star {% if i|add:'0' <= rating.stars %}text-warning{% endif %}"></i>
+                {% endfor %}
+            </div>
+            <small class="text-muted ms-auto">{{ rating.created_at|timesince }} ago</small>
+            {% if rating.user == request.user %}
+            <button class="btn btn-sm btn-danger ms-3 delete-review" onclick="deleteReview('{{ rating.id }}')">
+              <i class="fas fa-trash-alt"></i>
+          </button>
+          
+            {% endif %}
+        </div>
+        <p class="review-text mb-0">{{ rating.review }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+</div>
+
+
+<style>
+.btn-like {
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    padding: 8px 20px;
+}
+
+.btn-like.active {
+    background-color: #ff4b4b;
+    color: white;
+    transform: scale(1.05);
+}
+
+.btn-like:hover {
+    transform: scale(1.05);
+}
+
+.btn-like .fa-heart {
+    transition: transform 0.3s ease;
+}
+
+.animate__heartBeat {
+    animation: heartBeat 1.2s ease-in-out;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.3); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.3); }
+    70% { transform: scale(1); }
+}
+
+.animate__fadeIn {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.animate__fadeOut {
+    animation: fadeOut 0.3s ease-out;
+}
+
+
+.star-rating {
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.star-rating:hover,
+.star-rating.active,
+.star-rating.text-warning {
+  color: #ffc107;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+}
+
+.export-pdf {
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    padding: 10px 25px;
+    background: linear-gradient(145deg, #2196f3, #1976d2);
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+}
+
+.export-pdf:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+}
+
+</style>
+
+<script>
+
+
+
+function deleteReview(ratingId) {
+    Swal.fire({
+        title: 'Delete Review?',
+        text: "This action cannot be undone",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/Publication/delete-review/${ratingId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector(`[data-rating-id="${ratingId}"]`).remove();
+                    Swal.fire(
+                        'Deleted!',
+                        'Your review has been deleted.',
+                        'success'
+                    );
+                }
+            });
+        }
+    });
+}
+
+
+
+  function toggleLike(button) {
+    fetch('/Publication/toggle-like/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            publication_id: "{{ publication.id }}"
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Toggle button state with animation
+            button.classList.toggle('active');
+            const heart = button.querySelector('.fa-heart');
+            heart.classList.add('animate__heartBeat');
+            setTimeout(() => heart.classList.remove('animate__heartBeat'), 1000);
+            
+            // Update like count with animation
+            const likeCount = button.querySelector('.like-count');
+            likeCount.classList.add('animate__fadeOut');
+            setTimeout(() => {
+                likeCount.textContent = data.like_count;
+                likeCount.classList.remove('animate__fadeOut');
+                likeCount.classList.add('animate__fadeIn');
+            }, 300);
+
+            // Show toast notification
+            Swal.fire({
+                icon: 'success',
+                title: data.liked ? 'Added to favorites!' : 'Removed from favorites',
+                showConfirmButton: false,
+                timer: 1000,
+                position: 'top-end',
+                toast: true
+            });
+        }
+    });
+}
+
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      const stars = document.querySelectorAll('.star-rating');
+      const submitButton = document.querySelector('.submit-rating');
+      let selectedRating = 0;
+  
+      stars.forEach(star => {
+          star.addEventListener('mouseover', function() {
+              const rating = parseInt(this.dataset.rating);
+              highlightStars(rating);
+          });
+  
+          star.addEventListener('click', function() {
+              selectedRating = parseInt(this.dataset.rating);
+              stars.forEach((s, index) => {
+                  s.classList.toggle('active', index < selectedRating);
+              });
+          });
+  
+          star.addEventListener('mouseout', function() {
+              if (!selectedRating) {
+                  clearStars();
+              } else {
+                  highlightStars(selectedRating);
+              }
+          });
+      });
+  
+      submitButton.addEventListener('click', submitRating);
+  
+      function highlightStars(count) {
+          stars.forEach((star, index) => {
+              star.classList.toggle('text-warning', index < count);
+          });
+      }
+  
+      function clearStars() {
+          stars.forEach(star => star.classList.remove('text-warning'));
+      }
+  
+      
+  
+      function submitRating() {
+          if (!selectedRating) {
+              Swal.fire({
+                  icon: 'warning',
+                  title: 'Please select a rating',
+                  showConfirmButton: false,
+                  timer: 1500
+              });
+              return;
+          }
+  
+          const reviewText = document.querySelector('.rich-editor').value;
+  
+          fetch('/Publication/rate/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCookie('csrftoken')
+              },
+              body: JSON.stringify({
+                  publication_id: "{{ publication.id }}",
+                  rating: selectedRating,
+                  review: reviewText
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if(data.success) {
+                  // Update average rating display
+                  document.querySelector('.average-rating').textContent = `(${data.average_rating})`;
+                  
+                  // Update like count
+                  document.querySelector('.like-count').textContent = data.like_count;
+                  
+                  // Replace existing review with new one
+                  const reviewsContainer = document.querySelector('.reviews-container');
+                  reviewsContainer.innerHTML = `
+                      <div class="review-card glass-effect p-3 mb-3 rounded-3 animate__animated animate__fadeInUp">
+                          <div class="d-flex align-items-center mb-2">
+                              <span class="user-name me-3">{{ request.user.username }}</span>
+                              <div class="stars-display">
+                                  ${Array(5).fill().map((_, i) => `
+                                      <i class="fas fa-star ${i < selectedRating ? 'text-warning' : ''}"></i>
+                                  `).join('')}
+                              </div>
+                              <small class="text-muted ms-auto">Just now</small>
+                          </div>
+                          <p class="review-text mb-0">${reviewText}</p>
+                      </div>
+                  `;
+                  
+                  // Clear form and reset stars
+                  document.querySelector('.rich-editor').value = '';
+                  selectedRating = 0;
+                  clearStars();
+                  
+                  Swal.fire({
+                      icon: 'success',
+                      title: data.message || 'Rating submitted!',
+                      showConfirmButton: false,
+                      timer: 1500
+                  });
+              }
+          });
+      }
+  });
+  </script>
+  
+  
+  
+  
+  
+      
+        
+      
+      <style>
+      .social-share-section {
+          padding: 2rem;
+      }
+      
+      .share-card {
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 20px;
+          padding: 2rem;
+          box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+          backdrop-filter: blur(4px);
+      }
+      
+      .share-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 2rem;
+          padding-bottom: 1rem;
+          border-bottom: 2px solid rgba(0,0,0,0.05);
+      }
+      
+      .share-buttons {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-bottom: 2rem;
+      }
+      
+      .share-btn {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 1.5rem;
+          border: none;
+          border-radius: 12px;
+          color: white;
+          font-weight: 500;
+          transition: all 0.3s ease;
+      }
+      
+      .btn-content {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+      
+      .share-count {
+          background: rgba(255,255,255,0.2);
+          padding: 0.2rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.9rem;
+      }
+      
+      .facebook-btn { background: linear-gradient(45deg, #3b5998, #4c70ba); }
+      .twitter-btn { background: linear-gradient(45deg, #1da1f2, #0d8ed9); }
+      .linkedin-btn { background: linear-gradient(45deg, #0077b5, #00a0dc); }
+      .whatsapp-btn { background: linear-gradient(45deg, #25d366, #128C7E); }
+      
+      .share-btn:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      }
+      
+      .share-stats {
+          display: flex;
+          justify-content: center;
+          margin-top: 2rem;
+      }
+      
+      .total-shares-card {
+          background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
+          padding: 1rem 2rem;
+          border-radius: 15px;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+      }
+      
+      .total-shares {
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: #2d3748;
+      }
+      
+      /* Animations */
+      .share-btn:active {
+          transform: scale(0.95);
+      }
+      
+      @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
+          100% { transform: translateY(0px); }
+      }
+      
+      .share-btn i {
+          animation: float 2s ease-in-out infinite;
+      }
+      </style>
+      
+      
+      <script>
+        function sharePublication(platform) {
+    const publicationId = "{{ publication.id }}";
+    const title = "{{ publication.titre|escapejs }}";
+    const description = "{{ publication.description|truncatewords:30|escapejs }}";
+    const imageUrl = "{{ publication.image.url }}";
+    const currentUrl = window.location.href;
+    
+    // Customize sharing content for each platform
+    const urls = {
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}&quote=${title} - ${description}`,
+        twitter: `https://twitter.com/intent/tweet?url=${currentUrl}&text=${title}%0A${description}`,
+        linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${currentUrl}&title=${title}&summary=${description}`,
+        whatsapp: `https://api.whatsapp.com/send?text=${title}%0A${description}%0A${currentUrl}`
+    };
+    
+    // Track share and open sharing dialog
+    fetch(`/Publication/share/${publicationId}/${platform}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            document.querySelector('.total-shares').textContent = data.total_shares;
+            window.open(urls[platform], '_blank', 'width=600,height=400');
+        }
+    });
+}
+
+        </script>
+        
+      
         <br><br><br>
         <div class="text-center mt-5">
-          <a href="javascript:;" class="btn btn-lg btn-warning btn-rounded pulse-button px-5 py-3">
-            <i class="fas fa-podcast me-2"></i>Create your own recipe
-          </a>
-        </div>
+          <button onclick="toggleChatbot()" class="btn btn-lg btn-warning btn-rounded pulse-button px-5 py-3">
+              <i class="fas fa-podcast me-2"></i>Create your own recipe
+          </button>
+      </div>
+      
+      <div id="chatbot-container" class="container mt-4" style="display: none;">
+          <div class="card glass-effect">
+              <div class="card-header bg-warning bg-gradient">
+                  <h5 class="text-white mb-0">
+                      <i class="fas fa-robot me-2"></i>Recipe Assistant
+                  </h5>
+              </div>
+              <div class="card-body">
+                  <div id="chat-messages" class="chat-messages mb-3" style="height: 300px; overflow-y: auto;">
+                  </div>
+                  <div class="input-group">
+                      <input type="text" id="user-input" class="form-control" placeholder="Describe your recipe idea...">
+                      <button onclick="sendMessage()" class="btn btn-warning">
+                          <i class="fas fa-paper-plane"></i>
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+    
+    <script>
+    function getRecipe() {
+    const input = document.getElementById('user-input');
+    const output = document.getElementById('recipe-output');
+    const message = input.value;
+    
+    console.log('Sending message:', message);
+    output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating recipe...';
+    
+    fetch('/api/chatbot/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => {
+        console.log('Raw response:', response);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Parsed data:', data);
+        output.innerHTML = data.response;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        output.innerHTML = 'Error generating recipe. Check console for details.';
+    });
+}
+
+    </script>
+    
+      <script>
+      function toggleChatbot() {
+    const container = document.getElementById('chatbot-container');
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
+}
+
+function sendMessage() {
+    const input = document.getElementById('user-input');
+    const message = input.value;
+    if (!message) return;
+
+    addMessage('user', message);
+    input.value = '';
+
+    const loadingMessage = addMessage('bot', '<i class="fas fa-spinner fa-spin"></i> Creating your recipe...');
+
+    fetch('/Publication/api/chatbot/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadingMessage.remove();
+        if (data.status === 'success') {
+            addMessage('bot', data.response);
+        } else {
+            console.log('API Response:', data);
+            addMessage('bot', data.response || 'Error creating recipe. Please try again.');
+        }
+    });
+}
+
+function addMessage(sender, text) {
+    const messages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${sender} mb-2 p-2 ${sender === 'user' ? 'text-end' : ''}`;
+    messageDiv.innerHTML = `
+        <span class="message-bubble ${sender === 'user' ? 'bg-warning' : 'bg-light'} rounded p-2 d-inline-block">
+            ${text}
+        </span>
+    `;
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
+    return messageDiv;
+}
+
+      </script>
+      
+      <style>
+      .chat-message.user .message-bubble {
+          background: linear-gradient(310deg, #fb6340 0%, #fbb140 100%);
+          color: white;
+          max-width: 70%;
+      }
+      
+      .chat-message.bot .message-bubble {
+          background: #f8f9fa;
+          max-width: 70%;
+      }
+      
+      .glass-effect {
+          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.9);
+      }
+      </style>
+      
       </div>
     </div>
     <br><br><br>
@@ -1733,7 +2503,7 @@
               <a href="javascript:;" class="btn btn-soft-secondary btn-sm rounded-pill modify-btn hover-scale" data-comment-id="{{ comment.id }}">
                 <i class="fas fa-edit me-1 fa-bounce"></i> Modify
               </a>
-              
+              <a href="{% url 'delete_comment' comment.id %}" class="btn btn-soft-danger btn-sm rounded-pill hover-scale">
                 <i class="fas fa-trash me-1 fa-bounce"></i> Delete
               </a>
               <a href="javascript:;" class="btn btn-soft-danger btn-sm rounded-pill like-btn hover-scale">
@@ -1774,20 +2544,46 @@
       <div class="edit-form-container-{{ comment.id }} fade-slide" style="display: none;">
         <div class="d-flex mt-3">
           <div class="ms-5 w-100">
-            <form method="POST" class="edit-form floating-form glass-effect p-3 rounded-4" data-comment-id="{{ comment.id }}">
-              {% csrf_token %}
-              <div class="form-group mb-3">
-                <textarea name="edit_content" class="form-control bg-white border-0 shadow-sm" rows="3">{{ comment.contenu }}</textarea>
-              </div>
-              <div class="text-end">
-                <button type="button" class="btn btn-soft-secondary btn-sm rounded-pill cancel-edit me-2 hover-scale">
-                  <i class="fas fa-times me-1"></i> Cancel
-                </button>
-                <button type="submit" class="btn btn-warning btn-sm rounded-pill hover-scale">
-                  <i class="fas fa-save me-1 fa-fade"></i> Save Changes
-                </button>
-              </div>
-            </form>
+<form method="POST" action="{% url 'update_comment' publication.id comment.id %}" class="edit-form floating-form glass-effect p-3 rounded-4" data-comment-id="{{ comment.id }}">
+    {% csrf_token %}
+    <div class="form-group mb-3">
+        <textarea name="contenu" class="form-control bg-white border-0 shadow-sm" rows="3">{{ comment.contenu }}</textarea>
+    </div>
+    <div class="text-end">
+        <button type="button" class="btn btn-soft-secondary btn-sm rounded-pill cancel-edit me-2 hover-scale">
+            <i class="fas fa-times me-1"></i> Cancel
+        </button>
+        <button type="submit" class="btn btn-warning btn-sm rounded-pill hover-scale">
+            <i class="fas fa-save me-1 fa-fade"></i> Save Changes
+        </button>
+    </div>
+</form>
+
+
+            <script>
+              document.querySelectorAll('.edit-form').forEach(form => {
+                  form.addEventListener('submit', function(e) {
+                      e.preventDefault();
+                      const commentId = this.dataset.commentId;
+                      const content = this.querySelector('textarea[name="contenu"]').value;
+                      
+                      fetch(`/comment/update/${commentId}/`, {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded',
+                              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                          },
+                          body: `contenu=${encodeURIComponent(content)}`
+                      })
+                      .then(response => {
+                          if (response.ok) {
+                              window.location.reload();
+                          }
+                      });
+                  });
+              });
+              </script>
+              
           </div>
         </div>
       </div>
@@ -2320,6 +3116,257 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
     </div>
+    <div class="notification-center">
+      <div class="notification-bell" id="notificationBell">
+          <i class="fas fa-bell fa-bounce"></i>
+          <span class="notification-badge pulse">0</span>
+      </div>
+      
+      <div class="notification-panel glass-effect" id="notificationPanel">
+          <div class="notification-header">
+              <h5><i class="fas fa-bell-plus"></i> Notifications</h5>
+              <div class="notification-actions">
+                  <button class="mark-all-read">
+                      <i class="fas fa-check-double"></i> Mark all read
+                  </button>
+                  <button class="clear-all-btn" id="clearAllBtn">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+                
+              </div>
+          </div>
+          
+          <div class="notification-list custom-scrollbar" id="notificationList">
+              <!-- Notifications will be dynamically inserted here -->
+          </div>
+      </div>
+  </div>
+  
+  <style>
+  .notification-center {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+  }
+  
+  .notification-bell {
+      position: relative;
+      cursor: pointer;
+      background: linear-gradient(145deg, #ffffff, #e6e6e6);
+      padding: 15px;
+      border-radius: 50%;
+      box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
+      transition: transform 0.3s ease;
+  }
+  
+  .notification-bell:hover {
+      transform: scale(1.1);
+  }
+  
+  .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      color: white;
+      border-radius: 50%;
+      padding: 5px 8px;
+      font-size: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+  }
+  
+  .pulse {
+      animation: pulse 2s infinite;
+  }
+  
+  .glass-effect {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  }
+  
+  .notification-panel {
+      display: none;
+      position: absolute;
+      top: 70px;
+      right: 0;
+      width: 380px;
+      border-radius: 15px;
+      overflow: hidden;
+  }
+  
+  .notification-header {
+      padding: 20px;
+      background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+      color: white;
+  }
+  
+  .notification-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+  }
+  
+  .notification-actions button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 20px;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+  
+  .notification-actions button:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+  }
+  
+  .notification-list {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 15px;
+  }
+  
+  .notification-item {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #ffffff, #f5f5f5);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transform: translateX(100%);
+      animation: slideIn 0.5s forwards;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+  
+  .notification-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+  
+  .notification-item.unread {
+      border-left: 4px solid #4facfe;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.05);
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #4facfe, #00f2fe);
+      border-radius: 3px;
+  }
+  
+  @keyframes slideIn {
+      to { transform: translateX(0); }
+  }
+  
+  @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+  }
+  </style>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const bell = document.getElementById('notificationBell');
+    const panel = document.getElementById('notificationPanel');
+    const notificationList = document.getElementById('notificationList');
+    let notificationCount = 0;
+
+    bell.addEventListener('click', () => {
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    });
+
+    function addNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = 'notification-item unread animate__animated animate__fadeInRight';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <strong>${message}</strong>
+                <small>
+                    <i class="far fa-clock"></i> Just now
+                </small>
+            </div>
+        `;
+        notificationList.prepend(notification);
+        
+        notificationCount++;
+        document.querySelector('.notification-badge').textContent = notificationCount;
+
+        // Show toast notification
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+    }
+
+    // Process Django messages
+    {% if messages %}
+        {% for message in messages %}
+            addNotification("{{ message }}", "{{ message.tags }}");
+        {% endfor %}
+    {% endif %}
+
+
+    document.getElementById('clearAllBtn').addEventListener('click', () => {
+    const notificationItems = document.querySelectorAll('.notification-item');
+    notificationItems.forEach(item => {
+        item.classList.add('animate__fadeOutRight');
+        setTimeout(() => {
+            item.remove();
+        }, 500);
+    });
+    notificationCount = 0;
+    document.querySelector('.notification-badge').textContent = '0';
+});
+
+
+    // Clear all notifications
+    // Clear all notifications
+/*document.querySelector('.clear-all').addEventListener('click', () => {
+    const notificationItems = document.querySelectorAll('.notification-item');
+    notificationItems.forEach(item => {
+        item.classList.add('animate__fadeOutRight');
+        setTimeout(() => {
+            item.remove();
+        }, 500);
+    });
+    notificationCount = 0;
+    document.querySelector('.notification-badge').textContent = '0';
+});*/
+
+
+    // Mark all as read
+    document.querySelector('.mark-all-read').addEventListener('click', () => {
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.classList.remove('unread');
+        });
+    });
+});
+
+  </script>
+  
+  
+  
   </footer>
   <!--   Core JS Files   -->
   <script src="{% static 'js/core/popper.min.js' %}" type="text/javascript"></script>
@@ -2350,6 +3397,129 @@ document.addEventListener('DOMContentLoaded', function() {
     new GreenAudioPlayer('.gap-example');
   </script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8e10ec0c3d617787","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2024.10.5","token":"1b7cbb72744b40c580f8633c6b62637e"}' crossorigin="anonymous"></script>
+<script>
+  document.querySelectorAll('.edit-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const commentId = this.dataset.commentId;
+          const content = this.querySelector('textarea[name="contenu"]').value;
+          
+          fetch(`/comment/update/${commentId}/`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+              },
+              body: `contenu=${encodeURIComponent(content)}`
+          })
+          .then(response => response.json())
+          .then(data => {
+              if(data.status === 'success') {
+                  // Update the comment content in the DOM
+                  const commentContent = document.querySelector(`#comment-content-${commentId}`);
+                  commentContent.textContent = data.content;
+                  
+                  // Hide the edit form
+                  const editForm = document.querySelector(`.edit-form-container-${commentId}`);
+                  editForm.style.display = 'none';
+              }
+          });
+      });
+  });
+
+  function exportToPDF() {
+    const element = document.querySelector('.publication-content');
+    if (!element) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Export Failed',
+            text: 'Content not found'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Generating PDF',
+        text: 'Please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    const options = {
+        margin: [10, 10],
+        filename: 'publication.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().from(element).set(options).save()
+        .then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'PDF Generated Successfully!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+}
+
+function generatePDF() {
+    // Show loading spinner
+    Swal.fire({
+        title: 'Generating PDF...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Get the content
+    const content = document.querySelector('.publication-content');
+    
+    // Configure PDF options
+    const opt = {
+        margin: 1,
+        filename: 'publication.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Generate PDF
+    html2pdf()
+        .from(content)
+        .set(opt)
+        .save()
+        .then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'PDF Downloaded!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+}
+
+function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+
+  </script>
+  
 </body>
 
 </html>

@@ -4,18 +4,33 @@ from .models import Comment
 from django.views.generic import ListView
 from django.db.models import Q
 from datetime import datetime, timedelta
+from django.http import JsonResponse
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 
+
+from django.contrib import messages
 
 def add_comment(request):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            form.save()
+            comment = form.save(commit=False)
+            comment.auteur = request.user
+            comment.save()
+
+            # Add notification message
+            messages.success(request, f'New comment by {request.user.username}')
             return redirect('comment_list')
     else:
         form = CommentForm()
     return render(request, 'Comment/add_comment.html', {'form': form})
+
+        
+    
+    
+
 
 class CommentListView(ListView):
         model = Comment
@@ -51,14 +66,22 @@ class CommentListView(ListView):
 
 def update_comment(request, id):
     comment = Comment.objects.get(id=id)
+    publication = comment.publication
+
     if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect('Publication')  # Redirect back to Publication page
-    else:
-        form = CommentForm(instance=comment)
-    return render(request, 'Publication/Publication.html', {'form': form})
+        comment.contenu = request.POST.get('contenu')
+        comment.save()
+        return JsonResponse({
+            'status': 'success',
+            'content': comment.contenu
+        })
+
+    return render(request, 'Publication/Publication.html', {
+        'comment': comment,
+        'publication': publication
+    })
+
+
 
 
 

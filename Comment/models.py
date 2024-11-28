@@ -3,6 +3,8 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from datetime import date
 from Publication.models import Publication
+from User.models import User
+
 
 
 def validate_no_numbers(value):
@@ -20,7 +22,7 @@ def validate_dates(updated_at):
         raise ValidationError('Update date cannot be earlier than creation date')
 
 class Comment(models.Model):
-    
+    auteur = models.ForeignKey(User, on_delete=models.CASCADE)  # Add this line
     contenu = models.CharField(
         max_length=255,
         validators=[
@@ -34,7 +36,7 @@ class Comment(models.Model):
     )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
-    publication=models.ForeignKey(Publication,on_delete=models.CASCADE)
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
 
     def clean(self):
         if self.updated_at and self.created_at:
@@ -42,6 +44,6 @@ class Comment(models.Model):
                 raise ValidationError('Update date cannot be earlier than creation date')
 
     def __str__(self):
-        return self.contenu
+        return f"{self.auteur.username}: {self.contenu}"
 
 

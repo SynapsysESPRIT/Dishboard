@@ -44,7 +44,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'af.55269486@gmail.com'
 EMAIL_HOST_PASSWORD = 'kebq cwsc jmbo cawe'
-
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 INSTALLED_APPS = [
     'jazzmin',
@@ -160,3 +160,5 @@ STATICFILES_DIRS = [
 ]
 
 
+CLAUDE_API_KEY = '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'
+SITE_URL = 'http://localhost:8000'

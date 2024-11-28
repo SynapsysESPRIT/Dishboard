@@ -33,6 +33,8 @@ urlpatterns = [
     path('Recette/', include("Recette.urls")),
     path('Publication/', include("Publication.urls")),
     path('comments/', CommentListView.as_view(), name='comment_list'),
+    path('comments/list/', CommentListView.as_view(), name='comment_list'),  # Specific view for comment list
+    
     path('Article/', include('Article.urls')),
     path('addinventory', include('inventory.urls')),
     

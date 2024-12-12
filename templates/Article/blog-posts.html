@@ -378,10 +378,10 @@
                                     {{ i.contenu|truncatewords:20 }}
                                     <a href="{% url 'detailsClass' %}?id={{ i.id }}">Details</a>
 
-                                    {% if is_professional %}
+                                    
                                     <a href="{% url 'updateArticle' %}?id={{ i.id }}">Update</a>
                                     <a href="{% url 'deleteArticle' i.id %}">Delete</a>
-                                    {% endif %}
+                                    
                                 </p>
                                 <div class="author">
                                     <img src="{% static 'img/team-4.jpg' %}" alt="team-4"
@@ -397,11 +397,8 @@
                 </section>
 
                 <!-- Button Add Article, visible only to professionals -->
-                {% if is_professional %}
-                <a href="{% url 'add' %}">
-                    <button type="button" class="btn btn-primary">Add Article</button>
-                </a>
-                {% endif %}
+               
+                
 
 
 
@@ -475,11 +472,11 @@
                         <input type="text" class="form-control mb-sm-0 mb-2" placeholder="Email Here...">
                     </div>
                     <!--<button type="button" class="btn btn-primary">Subscribe</button>-->
-                    {% if is_professional %}
+                   
         <a href="{% url 'add' %}">
             <button type="button" class="btn btn-primary">Add Article</button>
         </a>
-    {% endif %}
+   
                     <h4 class="mt-5">Activity</h4>
                     <a href="javascript::">
                         <div class="card justify-content-center mb-3">

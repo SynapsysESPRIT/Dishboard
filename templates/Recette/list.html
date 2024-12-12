@@ -9641,15 +9641,7 @@
             </a>
             <p>{{ recette.description|truncatewords:15 }}</p>
             <p class="text-gradient text-dark mb-2 text-sm">Difficulty : {{ recette.difficulty_level }}</p>
-            <button
-                    class="favorite-btn btn {{ 'btn-danger' if recette.is_favorite(request.user) else 'btn-outline-secondary' }}"
-                    data-recette-id="{{ recette.id }}">
-                {% if recette.is_favorite(request.client) %}
-                    Retirer des Favoris
-                {% else %}
-                    Ajouter aux Favoris
-                {% endif %}
-            </button>
+            
             <a href="{% url 'recette_detail' pk=recette.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
             <a href="{% url 'deleteClass' recette.id %}" class="btn btn-outline-primary btn-sm">Delete</a>
             <a href="{% url 'updateClass' recette.id %}" class="btn btn-outline-primary btn-sm"> Update</a>
@@ -9659,47 +9651,7 @@
 
         {% endfor %}
     </div>
-          <button id="show-favorites-btn" class="btn btn-secondary">Afficher les Favoris</button>
-
-          <!-- Barre latérale des favoris -->
-          <div id="favorites-sidebar" class="favorites-sidebar" style="display: none;">
-              <div class="favorites-header">
-                  <h5>Mes Favoris</h5>
-                  <button id="close-favorites-btn" class="btn-close">&times;</button>
-              </div>
-              <div id="favorites-content">
-                  <!-- La liste des favoris sera chargée ici -->
-              </div>
-          </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.favorite-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const recetteId = this.dataset.recetteId;
-
-                fetch(`/toggle-favorite/${recetteId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',  // Inclure le token CSRF
-                    },
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.is_favorite) {
-                            this.classList.remove('btn-outline-secondary');
-                            this.classList.add('btn-danger');
-                            this.textContent = 'Retirer des Favoris';
-                        } else {
-                            this.classList.remove('btn-danger');
-                            this.classList.add('btn-outline-secondary');
-                            this.textContent = 'Ajouter aux Favoris';
-                        }
-                    });
-            });
-        });
-    });
-
-</script>
+         
 
 
           <script>

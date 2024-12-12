@@ -25,11 +25,6 @@ class AddArticle(LoginRequiredMixin, CreateView):
     form_class = ArticleModelForm
     success_url = reverse_lazy('blog')
 
-    def dispatch(self, request, *args, **kwargs):
-        if not isinstance(request.user, Professional):
-            return HttpResponseForbidden("Unauthorized")
-        return super().dispatch(request, *args, **kwargs)
-
 def detailsClass(request):
     id = request.GET.get('id')
     if id is None:

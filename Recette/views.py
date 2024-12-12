@@ -120,16 +120,3 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-@login_required
-def toggle_favorite(request, recette_id):
-    recette = get_object_or_404(Recette, id=recette_id)
-    recette.toggle_favorite(request.client)
-    return JsonResponse({'is_favorite': recette.is_favorite(request.client)})
-
-
-@login_required
-def favorites_list(request):
-    favorites = Recette.objects.filter(favorites__contains=f'"{request.client.id}"')
-    html = render_to_string('list.html', {'favorites': favorites}, request=request)
-    return JsonResponse({'html': html})
-

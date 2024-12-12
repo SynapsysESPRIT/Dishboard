@@ -71,7 +71,7 @@ def add_professional(request):
         professional = form.save(commit=False)  # Don't save yet
         professional.set_password(form.cleaned_data['password1'])  # Hash the password
         professional.save()  # Now save to the database
-        return redirect('list_professionals')
+        send_verification_email(professional, request)
     return render(request, 'User/sign-up-prof.html', {'form': form})
 
 def add_provider(request):
@@ -80,7 +80,7 @@ def add_provider(request):
         provider = form.save(commit=False)  # Don't save yet
         provider.set_password(form.cleaned_data['password1'])  # Hash the password
         provider.save()  # Now save to the database
-        return redirect('list_providers')
+        send_verification_email(provider, request)
     return render(request, 'User/sign-up-prov.html', {'form': form})
 
 def delete_user(request, user_id):

@@ -74,8 +74,7 @@ class DeleteArticle(DeleteView):
 
 
 def blog(request):
-    article = Article.objects.all()  # Get all articles
+    articles = Article.objects.all()  # Get all articles
     is_professional = isinstance(request.user, Professional) if request.user.is_authenticated else False
-    return render(request, 'Article/blog-posts.html', {"data": article, "is_professional": is_professional})
-
+    return render(request, 'Article/blog-posts.html', {"data": articles, "is_professional": is_professional})
 

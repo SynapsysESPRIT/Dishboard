@@ -3,7 +3,7 @@
 from django.urls import path
 from . import views  # Import your views
 from .views import  *
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView , PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 
 
@@ -33,4 +33,9 @@ urlpatterns = [
     path('verify-code/', views.verify_verification_code, name='verify_verification_code'),
     path('verify-email/<uuid:token>/', views.verify_email, name='verify_email'),
     
+
+    path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),  # Ensure correct name
+    path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]

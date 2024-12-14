@@ -9573,7 +9573,64 @@
         
          
             
-              
+        <div id="initial-recipe-container">
+          <button id="generate-initial-recipe"class="btn btn-outline-primary">Générer une recette</button>
+          <div id="recipe-result"></div>
+      </div>
+      
+    
+    
+    
+      <script>
+        document.getElementById('generate-initial-recipe').addEventListener('click', function() {
+            fetch("{% url 'generate_recipe' %}", {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const recipeResult = document.getElementById('recipe-result');
+                if (data.success) {
+                    const recipe = data.recipe;
+      
+                    // Construire l'affichage des ingrédients utilisés
+                    const usedIngredients = recipe.usedIngredients.map(ing => `<li>${ing.name}</li>`).join("");
+      
+                    // Construire l'affichage des ingrédients manquants
+                    const missedIngredients = recipe.missedIngredients.map(ing => `<li>${ing.name}</li>`).join("");
+      
+                    // Construire l'affichage des quantités d'ingrédients
+                    const extendedIngredients = recipe.extendedIngredients
+                        ? recipe.extendedIngredients.map(ing => `<li>${ing.amount} ${ing.unit} ${ing.name}</li>`).join("")
+                        : "<p>Ingrédients détaillés non disponibles.</p>";
+      
+                    // Générer le contenu HTML de la recette
+                    recipeResult.innerHTML = `
+                        <h3>${recipe.title}</h3>
+                        <img src="${recipe.image}" alt="${recipe.title}" />
+                        <p><strong>Ingrédients utilisés :</strong></p>
+                        <ul>${usedIngredients}</ul>
+                        <p><strong>Ingrédients manquants :</strong></p>
+                        <ul>${missedIngredients}</ul>
+                        
+                        <p><strong>Ingrédients exacts avec quantités :</strong></p>
+                        <ul>${extendedIngredients}</ul>
+                        
+                        <p><strong>Temps de cuisson :</strong> ${recipe.readyInMinutes} minutes</p>
+                        
+                        <p><strong>Instructions :</strong></p>
+                        <p>${recipe.instructions || "Instructions non disponibles."}</p>
+                    `;
+                } else {
+                    recipeResult.innerHTML = `<p>${data.message}</p>`;
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+      </script>
+      
             
 <div class="container">
   <div class="container">

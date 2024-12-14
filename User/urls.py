@@ -5,8 +5,6 @@ from . import views  # Import your views
 from .views import  *
 from django.contrib.auth.views import LoginView, LogoutView , PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
-
-
 urlpatterns = [
     path('users/', views.list_users, name='list_users'),
     path('users/<int:user_id>/', views.user_detail_update, name='user_detail_update'),
@@ -28,7 +26,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),  # Adds the logout route
 
     #path('verify-email/<str:token>/', verify_email, name='verify_email'),
-
 
     path('verify-code/', views.verify_verification_code, name='verify_verification_code'),
     path('verify-email/<uuid:token>/', views.verify_email, name='verify_email'),

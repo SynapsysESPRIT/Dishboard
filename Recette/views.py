@@ -10,6 +10,41 @@ from django.urls import reverse
 from django.views.generic import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.http import JsonResponse
+from .models import Recette
+from inventory.models import InventoryIngredient
+import requests
+
+@login_required
+def generate_recipe(request):
+    # Obtenir l'inventaire de l'utilisateur connecté
+    user_inventory = InventoryIngredient.objects.filter(inventory__user=request.user)
+
+    # Récupérer les ingrédients de l'inventaire
+    ingredients = [item.ingredient.label for item in user_inventory]
+    ingredients_list = ",".join(ingredients)
+
+    # Utiliser l'API Spoonacular pour générer des recettes
+    url = "https://api.spoonacular.com/recipes/findByIngredients"
+    params = {
+        "ingredients": ingredients_list,
+        "number": 5,  # Récupérer plusieurs recettes pour diversifier
+        "ranking": 2,  # Prioriser les ingrédients exacts
+        "apiKey": "1f189ba4dc134083a582b76c970ff5a8",
+    }
+
+    response = requests.get(url, params=params)
+
+    if response.status_code == 200:
+        recipes = response.json()
+        if recipes:
+            import random
+            recipe = random.choice(recipes)  # Choisir une recette aléatoire
+            return JsonResponse({"success": True, "recipe": recipe})
+        else:
+            return JsonResponse({"success": False, "message": "Aucune recette trouvée."})
+    else:
+        return JsonResponse({"success": False, "message": "Erreur lors de l'appel à l'API Spoonacular."})
 
 class RecetteCreateView(LoginRequiredMixin, CreateView):
     model = Recette

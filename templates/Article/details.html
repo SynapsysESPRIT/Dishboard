@@ -25589,6 +25589,17 @@
                 justify-content: flex-end;
             }
         }
+
+
+
+
+
+
+
+
+        #resume-output {
+            display: none;
+          }
         </style>
 </head>
 
@@ -25643,67 +25654,8 @@
     
     <!-- End Navbar -->
     <!-- -------- START HEADER 11 w/ carousel ------- -->
-    <header>
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <div class="page-header min-vh-75 m-3 border-radius-xl" style="background-image: url('https://img.freepik.com/photos-premium/inscription-aliments-sains-photo-ensemble-legumes-fruits-aliments-vue-dessus-espace-libre-pour-votre-texte_187166-54571.jpg?ga=GA1.1.1043566050.1676367890');">
-                <span class="mask bg-gradient-dark"></span>
-                <div class="container">
-                  <div class="row">
-                    <div class="col-lg-6 my-auto">
-                      <h4 class="text-white mb-0 fadeIn1 fadeInBottom"></h4>
-                      <h1 class="text-white fadeIn2 fadeInBottom">Inspirez votre quotidien !</h1>
-                      <p class="lead text-white opacity-8 fadeIn3 fadeInBottom">Découvrez des idées inspirantes pour transformer votre quotidien.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-            <div class="carousel-item">
-              <div class="page-header min-vh-75 m-3 border-radius-xl" style="background-image: url('https://img.freepik.com/photos-premium/fond-nourriture-ensemble-aliments-sains-propres-legumes-fruits-viande-poisson-noix-verts-fond-pierre-noire-vue-dessus-espace-copie-gratuit_187166-12190.jpg?w=1060');">
-                <span class="mask bg-gradient-dark"></span>
-                <div class="container">
-                  <div class="row">
-                    <div class="col-lg-6 my-auto">
-                      <h4 class="text-white mb-0 fadeIn1 fadeInBottom"></h4>
-                      <h1 class="text-white fadeIn2 fadeInBottom"> Un monde à explorer !</h1>
-                      <p class="lead text-white opacity-8 fadeIn3 fadeInBottom">Plongez dans nos articles et explorez un monde de connaissances et d'innovation.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-            <div class="carousel-item">
-              <div class="page-header min-vh-75 m-3 border-radius-xl" style="background-image: url('https://img.freepik.com/photos-premium/aliments-dietetiques-equilibres-fond-sombre-concept-alimentation-saine_661495-3962.jpg?ga=GA1.1.1043566050.1676367890');">
-                <span class="mask bg-gradient-dark"></span>
-                <div class="container">
-                  <div class="row">
-                    <div class="col-lg-6 my-auto">
-                      <h4 class="text-white mb-0 fadeIn1 fadeInBottom"></h4>
-                      <h1 class="text-white fadeIn2 fadeInBottom">Tendance et savoir !</h1>
-                      <p class="lead text-white opacity-8 fadeIn3 fadeInBottom">Votre source d'information fiable pour rester connecté aux tendances actuelles.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-          </div>
-          <div class="min-vh-75 position-absolute w-100 top-0">
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon position-absolute bottom-50" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-              <span class="carousel-control-next-icon position-absolute bottom-50" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </a>
-          </div>
-        </div>
-      </header>
+    <header></header>
+
     <!-- -------- END HEADER 11 w/ carousel ------- -->
 
                 <!-- START Blogs w/ 3 rows w/ image on left & title, text, author on end-->
@@ -25716,196 +25668,340 @@
 <br>
 <br>
 <br>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+</script>
+
 <br>
 
-<div class="container-fluid px-3">
-    <div class="col-lg-4 col-md-6 px-sm-1 mt-md-0 mt-4">
-        <div class="info-horizontal bg-light border-radius-xl p-5">
-            <div class="article-details">
-                <h3>Title: {{ item.titre }}</h3>
-                <h4>Description: {{ item.contenu }}</h4>
-
-                {% if item.piece_jointe_2 %}
-                <p>PDF Attachment: <a href="{{ item.piece_jointe_2.url }}" download> {{ item.piece_jointe_2.name }} </a></p>
-                <canvas id="pdf-canvas"></canvas>
-                <div class="navigation">
-                    <button id="prev-page">Page Précédente</button>
-                    <button id="next-page">Page Suivante</button>
-                    <button id="save-page">Sauvegarder la Page</button>
-                    <button id="load-page">Charger la Page</button>
+<div class="container-fluid py-5">
+    <div class="row">
+        <!-- Main PDF Viewer Column -->
+        <div class="col-lg-9">
+            <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+                <div class="card-header bg-gradient-primary p-4">
+                    <h3 class="text-white mb-0">{{ item.titre }}</h3>
                 </div>
-                <center><span>Page <span id="page-num"></span> sur <span id="page-count"></span></span></center>
-               
                 
-                <script>
-                    var url = '{{ item.piece_jointe_2.url }}';
-                    var pdfjsLib = window['pdfjs-dist/build/pdf'];
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+                <div class="card-body p-4">
+                    {% if item.piece_jointe_2 %}
+                    <!-- PDF Viewer with larger canvas -->
+                    <div class="pdf-container bg-light p-4 rounded-3 mb-4">
+                        <canvas id="pdf-canvas" style="width: 100%; max-height: 800px;"></canvas>
+                        
+                        <!-- Enhanced Navigation Controls -->
+                        <div class="navigation-controls d-flex justify-content-between align-items-center bg-white p-3 rounded-3 mt-4">
+                            <div class="d-flex gap-2">
+                                <button id="prev-page" class="btn btn-primary rounded-pill">
+                                    <i class="fas fa-chevron-left me-2"></i>Previous
+                                </button>
+                                <button id="next-page" class="btn btn-primary rounded-pill">
+                                    Next<i class="fas fa-chevron-right ms-2"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="page-info">
+                                <span class="badge bg-gradient-primary px-3 py-2">
+                                    Page <span id="page-num" class="fw-bold"></span> of <span id="page-count"></span>
+                                </span>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button id="save-page" class="btn btn-success rounded-pill">
+                                    <i class="fas fa-bookmark me-2"></i>Save Page
+                                </button>
+                                <button id="load-page" class="btn btn-info rounded-pill">
+                                    <i class="fas fa-history me-2"></i>Load Saved
+                                </button>
+                            </div>
 
-                    var pdfDoc = null,
-                        pageNum = 1,
-                        pageIsRendering = false,
-                        pageNumIsPending = null;
+                        </div>
+                    </div>
 
-                    var canvas = document.getElementById('pdf-canvas');
-                    var ctx = canvas.getContext('2d');
+                    <button id="resume-button">Summary</button>
+                <input type="number" id="page-number-input" placeholder="Enter page number" />
+                <div id="resume-output"></div>
+                <div id="summary-output"></div>
 
-                    function renderPage(num) {
-                        pageIsRendering = true;
+                    <script>
+                        var url = '{{ item.piece_jointe_2.url }}';
+                        var pdfjsLib = window['pdfjs-dist/build/pdf'];
+                        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
-                        pdfDoc.getPage(num).then(function(page) {
-                            var scale = 1.5;
-                            var viewport = page.getViewport({ scale: scale });
-                            canvas.height = viewport.height;
-                            canvas.width = viewport.width;
+                        var pdfDoc = null,
+                            pageNum = 1,
+                            pageIsRendering = false,
+                            pageNumIsPending = null;
 
-                            var renderContext = {
-                                canvasContext: ctx,
-                                viewport: viewport
-                            };
-                            page.render(renderContext).promise.then(function() {
-                                pageIsRendering = false;
+                        var canvas = document.getElementById('pdf-canvas');
+                        var ctx = canvas.getContext('2d');
 
-                                if (pageNumIsPending !== null) {
-                                    renderPage(pageNumIsPending);
-                                    pageNumIsPending = null;
-                                }
+                        function renderPage(num) {
+                            pageIsRendering = true;
+
+                            pdfDoc.getPage(num).then(function(page) {
+                                var scale = 1.5;
+                                var viewport = page.getViewport({ scale: scale });
+                                canvas.height = viewport.height;
+                                canvas.width = viewport.width;
+
+                                var renderContext = {
+                                    canvasContext: ctx,
+                                    viewport: viewport
+                                };
+                                page.render(renderContext).promise.then(function() {
+                                    pageIsRendering = false;
+
+                                    if (pageNumIsPending !== null) {
+                                        renderPage(pageNumIsPending);
+                                        pageNumIsPending = null;
+                                    }
+                                });
+
+                                document.getElementById('page-num').textContent = num;
                             });
+                        }
 
-                            document.getElementById('page-num').textContent = num;
+                        function queueRenderPage(num) {
+                            if (pageIsRendering) {
+                                pageNumIsPending = num;
+                            } else {
+                                renderPage(num);
+                            }
+                        }
+
+                        document.getElementById('prev-page').addEventListener('click', function() {
+                            if (pageNum <= 1) return;
+                            pageNum--;
+                            queueRenderPage(pageNum);
                         });
-                    }
-                    
-                    function queueRenderPage(num) {
-                        if (pageIsRendering) {
-                            pageNumIsPending = num;
-                        } else {
-                            renderPage(num);
+
+                        document.getElementById('next-page').addEventListener('click', function() {
+                            if (pageNum >= pdfDoc.numPages) return;
+                            pageNum++;
+                            queueRenderPage(pageNum);
+                        });
+
+                        pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                            pdfDoc = pdfDoc_;
+                            document.getElementById('page-count').textContent = pdfDoc.numPages;
+                            renderPage(pageNum);
+                        });
+
+                        function loadBookmarks() {
+                            var bookmarksList = document.getElementById('bookmarks-list');
+                            bookmarksList.innerHTML = '';
+                            var savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+                            savedBookmarks.forEach(function(bookmark) {
+                                var li = document.createElement('li');
+                                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                                li.innerHTML = `
+                                    <span><i class="fas fa-bookmark text-primary me-2"></i>Page ${bookmark}</span>
+                                    <button class="btn btn-sm btn-primary rounded-pill" onclick="goToPage(${bookmark})">
+                                        Go to page
+                                    </button>
+                                `;
+                                bookmarksList.appendChild(li);
+                            });
                         }
-                    }
 
-                    document.getElementById('prev-page').addEventListener('click', function() {
-                        if (pageNum <= 1) {
-                            return;
+                        function goToPage(num) {
+                            pageNum = num;
+                            queueRenderPage(pageNum);
                         }
-                        pageNum--;
-                        queueRenderPage(pageNum);
-                    });
 
-                    document.getElementById('next-page').addEventListener('click', function() {
-                        if (pageNum >= pdfDoc.numPages) {
-                            return;
-                        }
-                        pageNum++;
-                        queueRenderPage(pageNum);
-                    });
+                        document.getElementById('save-page').addEventListener('click', function() {
+                            var savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+                            if (!savedBookmarks.includes(pageNum)) {
+                                savedBookmarks.push(pageNum);
+                                localStorage.setItem('bookmarks', JSON.stringify(savedBookmarks));
+                                loadBookmarks();
+                            }
+                        });
 
-                    pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
-                        pdfDoc = pdfDoc_;
-                        document.getElementById('page-count').textContent = pdfDoc.numPages;
-                        renderPage(pageNum);
-                    });
-                    // Sauvegarder la page actuelle dans localStorage
-  document.getElementById('save-page').addEventListener('click', function() {
-    localStorage.setItem('savedPage', pageNum);
-    alert('Page sauvegardée : ' + pageNum);
-  });
+                        window.onload = loadBookmarks;
 
- // Charger la page sauvegardée depuis localStorage
-    document.getElementById('load-page').addEventListener('click', function() {
-    var savedPage = localStorage.getItem('savedPage');
-    if (savedPage) {
-        pageNum = parseInt(savedPage);
-        queueRenderPage(pageNum);
-        alert('Chargement de la page : ' + pageNum);
-    } else {
-        alert('Aucune page sauvegardée.');
-    }
-  });
- // Sauvegarder la page actuelle dans localStorage
- document.getElementById('save-page').addEventListener('click', function() {
-    localStorage.setItem('savedPage', pageNum);
-    alert('Page sauvegardée : ' + pageNum);    
- });
- // Fonction pour charger l'historique des signets
- function loadBookmarks() {
-    var bookmarksList = document.getElementById('bookmarks-list');
-    bookmarksList.innerHTML = ''; // Vider la liste avant de la remplir
 
-    // Récupérer les signets sauvegardés depuis localStorage
-    var savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
 
-    savedBookmarks.forEach(function(bookmark) {
-        var bookmarkItem = document.createElement('li');
-        bookmarkItem.textContent = 'Page ' + bookmark;
-        bookmarkItem.setAttribute('data-page', bookmark);
-        
-        // Ajouter un événement de clic pour charger la page sauvegardée
-        bookmarkItem.addEventListener('click', function() {
-            pageNum = parseInt(this.getAttribute('data-page'));
-            queueRenderPage(pageNum);
-        });
-
-        bookmarksList.appendChild(bookmarkItem);
-    });
- }
-
- // Sauvegarder la page actuelle dans localStorage
- document.getElementById('save-page').addEventListener('click', function() {
-    var savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('resume-button').addEventListener('click', function() {
+                                var url = '{{ item.piece_jointe_2.url }}';
+                                var pdfjsLib = window['pdfjs-dist/build/pdf'];
+                                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
     
-    if (!savedBookmarks.includes(pageNum)) {
-        savedBookmarks.push(pageNum); // Ajouter la page si elle n'est pas déjà sauvegardée
-        localStorage.setItem('bookmarks', JSON.stringify(savedBookmarks));
-        alert('Page sauvegardée : ' + pageNum);
-        loadBookmarks(); // Mettre à jour l'affichage des signets
-    } else {
-        alert('Cette page est déjà sauvegardée.');
-    }
-  });
+                                var pageNum = parseInt(document.getElementById('page-number-input').value);
+                                if (isNaN(pageNum) || pageNum < 1) {
+                                    alert("Veuillez entrer un numéro de page valide.");
+                                    return;
+                                }
+    
+                                pdfjsLib.getDocument(url).promise.then(function(pdfDoc) {
+                                    if (pageNum > pdfDoc.numPages) {
+                                        alert("Le numéro de page est supérieur au nombre total de pages : " + pdfDoc.numPages);
+                                        return;
+                                    }
+    
+                                    pdfDoc.getPage(pageNum).then(function(page) {
+                                        return page.getTextContent().then(function(textContent) {
+                                            var lines = textContent.items.map(item => item.str);
+                                            var extractedText = lines.join(' ');
+    
+                                            // Show the extracted text
+                                            var resumeOutput = `<h4>Page ${pageNum}:</h4><p>${extractedText}</p>`;
+                                            document.getElementById('resume-output').innerHTML = resumeOutput;
+    
+                                            // Send extracted text to backend for summarization
+                                            fetch('/Article/summarize-text/', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRFToken': csrftoken
+                                                },
+                                                body: JSON.stringify({ text: extractedText })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.summary) {
+                                                    var summaryOutput = `<h4>Résumé:</h4><p>${data.summary}</p>`;
+                                                    document.getElementById('summary-output').innerHTML = summaryOutput;
+                                                } else if (data.error) {
+                                                    alert(data.error);
+                                                }
+                                            })
+                                            .catch(function(error) {
+                                                console.error('Error during fetch:', error);
+                                            });
+                                        });
+                                    });
+                                }).catch(function(error) {
+                                    console.error('Error loading the PDF:', error); // Handle PDF loading errors
+                                });
+                            });
+                        });
+                    </script>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>PDF Attachment not found.
+                    </div>
+                    {% endif %}
 
- // Charger les signets au chargement de la page
- window.onload = function() {
-    loadBookmarks();
- };
- </script>
-                {% else %}
-                <p>PDF Attachment not found.</p>
-                {% endif %}
-
-                <p>Created At: {{ item.created_at }}</p>
-                <p>Updated At: {{ item.updated_at }}</p>
-
-                <a href="{% url 'list' %}" class="back-link">Go back</a>
-            </div>
-        </div>
-     </div>
-     </div>
-
-
-                <!-- END Blogs w/ 3 rows w/ image on left & title, text, author on end-->
-
-                <!-- START Blogs w/ 3 rows w/ image on left & title, text, author on end-->
-
-                <!-- END Blogs w/ 3 rows w/ image on left & title, text, author on end-->
-
-                 
-                <div class="col-lg-2">
-                    <div class="info-horizontal bg-light border-radius-xl p-3 sticky-top" style="top: 20px; max-height: 400px; overflow-y: auto;">
-                        <div class="bookmarks">
-                            <h5 class="mb-3">Historique des Pages Sauvegardées</h5>
-                            <ul id="bookmarks-list" class="list-unstyled"></ul>
+                    <!-- Document Details -->
+                    <div class="document-details mt-4">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0 h-100">
+                                    <div class="card-body">
+                                        <h5 class="mb-3"><i class="fas fa-info-circle text-primary me-2"></i>Description</h5>
+                                        <p class="text-muted">{{ item.contenu }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0 h-100">
+                                    <div class="card-body">
+                                        <h5 class="mb-3"><i class="fas fa-calendar text-primary me-2"></i>Timeline</h5>
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted">Created: {{ item.created_at|date:"M d, Y" }}</small>
+                                            <small class="text-muted">Updated: {{ item.updated_at|date:"M d, Y" }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                
-    
-    <!-- ---- END FOOTER 2 dark w/ bg image 5 cols & subscribe area & social---- -->
-    <!--   Core JS Files   -->
+        <!-- Bookmarks Sidebar -->
+        <div class="col-lg-3">
+            <div class="card shadow-lg border-0 rounded-3 sticky-top" style="top: 2rem;">
+                <div class="card-header bg-gradient-primary p-4">
+                    <h5 class="text-white mb-0"><i class="fas fa-bookmark me-2"></i>Saved Pages</h5>
+                </div>
+                <div class="card-body p-4">
+                    <ul id="bookmarks-list" class="list-group list-group-flush"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script src="{% static 'js/core/popper.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/core/bootstrap.min.js' %}" type="text/javascript"></script>
+<style>
+:root {
+    --primary-orange: #fb6340;
+    --primary-green: #2dce89;
+    --light-orange: rgba(251, 99, 64, 0.1);
+    --light-green: rgba(45, 206, 137, 0.1);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(310deg, #fb6340, #fbb140);
+}
+
+.pdf-container {
+    background: #f8f9fa;
+    border-radius: 1rem;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+}
+
+#pdf-canvas {
+    border-radius: 0.5rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.navigation-controls {
+    box-shadow: 0 4px 6px rgba(50,50,93,0.1);
+}
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(50,50,93,0.1);
+}
+
+.bookmark-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bookmark-item:hover {
+    background-color: var(--light-orange);
+}
+
+#bookmarks-list .list-group-item {
+    border: none;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+#bookmarks-list .list-group-item:hover {
+    background-color: var(--light-orange);
+    transform: translateX(5px);
+}
+</style>
+
     
 </body>
 

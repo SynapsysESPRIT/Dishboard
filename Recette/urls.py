@@ -8,7 +8,7 @@ urlpatterns = [
     path('recette/<int:pk>/', recette_detail, name='recette_detail'),
     path('deleteclass/<int:pk>', DeleteRecette.as_view() , name="deleteClass"),
     path('updateclass/<int:pk>', UpdateConference.as_view() , name="updateClass"),
-
+    path('generate-recipe/', generate_recipe, name='generate_recipe'),
   
     # path('ajouter_recette/', ajouter_recette, name='ajouter_recette'),
 

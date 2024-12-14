@@ -93,16 +93,10 @@ def delete_user(request, user_id):
 
 
 class Login(LoginView):
-    template_name="user/login.html"
+    template_name = "user/login.html"
     
     def get_success_url(self):
-        user_id = self.request.user.id
-        return reverse('user_detail_update', args=[user_id])
-
-@login_required
-def profile_view(request, user_id):
-    return render(request, 'settings.html', {'user_id': user_id})
-
+        return reverse('home')
 
 from django.core.mail import send_mail
 from django.conf import settings

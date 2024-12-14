@@ -11,6 +11,8 @@ urlpatterns = [
     path('update/', updateClass, name='updateArticle'),
     path('delete/<int:pk>/', DeleteArticle.as_view(), name='deleteArticle'),
     path('blog/', blog, name='blog'),
+    path('summarize-text/', summarize_text, name="summarize_text"),
+
     ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)

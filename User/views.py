@@ -6,6 +6,9 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from django.contrib.auth import logout
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
+from django.urls import reverse
 
 
 # List views
@@ -34,9 +37,14 @@ def list_admins(request):
 def user_detail_update(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
-        if 'send_verification_code' in request.POST:
-            send_verification_code(user, request)
-            return HttpResponse("Verification code sent to your email.")
+        if 'profile_picture' in request.FILES:
+            user.profile_picture = request.FILES['profile_picture']
+            user.save()
+            return redirect('user_detail_update', user_id=user.id)
+        elif 'remove_profile_picture' in request.POST:
+            user.profile_picture.delete()
+            user.save()
+            return redirect('user_detail_update', user_id=user.id)
         form = UserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
@@ -146,3 +154,9 @@ def verify_email(request, token):
         return HttpResponse("Your email has been verified successfully!")
     except User.DoesNotExist:
         return HttpResponse("Invalid or expired verification link.")
+
+def user_logout(request):
+    if request.method == 'GET':
+        logout(request)
+        return HttpResponseRedirect(reverse('login'))
+    return HttpResponseNotAllowed(['GET'])

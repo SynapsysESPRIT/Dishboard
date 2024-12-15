@@ -1,8 +1,0 @@
-<!-- templates/User/add_professional.html -->
-<h1>Add Professional</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
-<a href="{% url 'list_professionals' %}">Back to Professional List</a>

@@ -3,15 +3,17 @@
 <div class="container position-sticky z-index-sticky top-0">
     <div class="row">
         <div class="col-12">
-            <nav class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
+            <nav
+                class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
                 <div class="container-fluid px-0">
-                    <a class="navbar-brand font-weight-bolder ms-sm-3"
-                        href="{% url 'home' %}" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
+                    <a class="navbar-brand font-weight-bolder ms-sm-3" href="{% url 'home' %}" rel="tooltip"
+                        title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
                         DISHBOARD
                     </a>
 
-                    <button class="navbar-toggler shadow-none ms-md-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation"
-                        aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler shadow-none ms-md-2" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
+                        aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon mt-2">
                             <span class="navbar-toggler-bar bar1"></span>
                             <span class="navbar-toggler-bar bar2"></span>
@@ -22,23 +24,48 @@
                         <ul class="navbar-nav navbar-nav-hover mx-auto">
                             <li class="nav-item dropdown dropdown-hover mx-2">
                                 <a role="button" href="{% url 'publication_liste' %}"
-                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" aria-expanded="false">
+                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
+                                    aria-expanded="false">
                                     Forum
-                                    <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow" class="arrow ms-1">
                                 </a>
                             </li>
                             <li class="nav-item dropdown dropdown-hover mx-2">
-                                {% if user.is_authenticated %}
-                                <a role="button" href="{% url 'user_detail_update' user.id %}"
-                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" aria-expanded="false">
-                                    Account
+                                <a role="button" href="{% url 'blog' %}"
+                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
+                                    id="dropdownMenuBlocks" aria-expanded="false">
+                                    Articles
                                 </a>
-                                {% else %}
-                                <a role="button"
-                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuAccount" data-bs-toggle="dropdown"
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="nav-item dropdown dropdown-hover mx-2">
+                                <a role="button" href="{% url 'user_detail_update' user.id %}"
+                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
                                     aria-expanded="false">
                                     Account
-                                    <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow" class="arrow ms-1">
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown dropdown-hover mx-2">
+                                <a role="button" href="{% url 'inventory-view' %}"
+                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
+                                    id="dropdownMenuDocs" aria-expanded="false">
+                                    My Inventory
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown dropdown-hover mx-2">
+                                <a role="button" href="{% url 'liste_recettes' %}"
+                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
+                                    id="dropdownMenuDocs" aria-expanded="false">
+                                    My Recipes
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item dropdown dropdown-hover mx-2">
+                                <a role="button"
+                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
+                                    id="dropdownMenuAccount" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Join us!
+                                    <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow"
+                                        class="arrow ms-1">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-animation dropdown-lg border-radius-xl p-3 mt-0 mt-lg-3"
                                     aria-labelledby="dropdownMenuAccount">
@@ -66,8 +93,8 @@
                                                         class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
                                                         id="dropdownSignIn">
                                                         <span>Log in</span>
-                                                        <img src="{% static 'img/down-arrow.svg' %}"
-                                                            alt="down-arrow" class="arrow">
+                                                        <img src="{% static 'img/down-arrow.svg' %}" alt="down-arrow"
+                                                            class="arrow">
                                                     </a>
                                                 </li>
                                                 <li
@@ -75,8 +102,8 @@
                                                     <a class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
                                                         id="dropdownSignUp">
                                                         <span>Sign Up</span>
-                                                        <img src="{% static 'img/down-arrow.svg' %}"
-                                                            alt="down-arrow" class="arrow">
+                                                        <img src="{% static 'img/down-arrow.svg' %}" alt="down-arrow"
+                                                            class="arrow">
                                                     </a>
                                                     <div class="dropdown-menu mt-0 py-3 px-2"
                                                         aria-labelledby="dropdownSignUp">
@@ -98,52 +125,48 @@
                                         </div>
                                     </div>
                                 </div>
-                                {% endif %}
                             </li>
-                            <li class="nav-item dropdown dropdown-hover mx-2">
-                                <a role="button" href="{% url 'blog' %}"
-                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                    id="dropdownMenuBlocks" aria-expanded="false">
-                                    Articles
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown dropdown-hover mx-2">
-                                <a role="button" href="{% url 'inventory-view' %}"
-                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                    id="dropdownMenuDocs" aria-expanded="false">
-                                    My Inventory
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown dropdown-hover mx-2">
-                                <a role="button" href="{% url 'liste_recettes' %}"
-                                    class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                    id="dropdownMenuDocs" aria-expanded="false">
-                                    My Recipes
-                                </a>
-                            </li>
+                            {% endif %}
                         </ul>
                         <ul class="navbar-nav d-lg-block d-none">
+                            {% if user.is_authenticated %}
                             <li class="nav-item">
                                 <div class="my-profiles-sec">
-                                    <span><img src="{% static 'img/resource/aaa.jpg' %}" alt="" class="small-image center-image responsive-img" /></span>
+                                    {% if user.profile_picture %}
+                                    <span><img src="{{ user.profile_picture.url }}" alt=""
+                                            class="small-image responsive-img" /></span>
+                                    {% else %}
+                                    <span><img src="{% static 'img/resource/aaa.png' %}" alt=""
+                                            class="small-image responsive-img" /></span>
+                                    {% endif %}
                                 </div>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
             </nav>
             <!-- End Navbar -->
+             
         </div>
     </div>
 </div>
+
 
 <!-- Add the following CSS for responsiveness -->
 <style>
     .responsive-img {
         max-width: 10%;
         height: auto;
-        border-radius: 50%; /* Optional: to make it circular */
-        
-        
+        border-radius: 50%;
+        /* Optional: to make it circular */
     }
 </style>
+<style type="text/css">
+    * {
+        cursor: url(https://ani.cursors-4u.net/nature/nat-11/nat1051.cur), auto !important;
+    }
+</style>
+<a href="https://www.cursors-4u.com/cursor/2017/03/14/grapefruit.html" target="_blank" title="Grapefruit"><img
+        src="https://cur.cursors-4u.net/cursor.png" border="0" alt="Grapefruit"
+        style="position:absolute; top: 0px; right: 0px;" /></a>

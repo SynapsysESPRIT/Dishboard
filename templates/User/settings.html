@@ -41,6 +41,54 @@
             margin-left: auto;
             margin-right: auto;
         }
+        .default-profile-picture {
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ccc;
+        }
+        .upload-img-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .upload-img-bar .round {
+            position: relative;
+        }
+        .upload-img-bar .round img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .upload-img-bar .round .remove-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .upload-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .upload-info label {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -194,153 +242,7 @@
                     </div><!-- Logo -->
 
 
-                    <div class="container position-sticky z-index-sticky top-0">
-                        <div class="row">
-                            <div class="col-12">
-                                <nav
-                                    class="navbar navbar-expand-lg  blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
-                                    <div class="container-fluid px-0">
-                                        <a class="navbar-brand font-weight-bolder ms-sm-3"
-                                            href="{% url 'home' %}"
-                                            rel="tooltip" title="Designed and Coded by Creative Tim"
-                                            data-placement="bottom" target="_blank">
-                                            DISHBOARD
-                                        </a>
-
-                                        <button class="navbar-toggler shadow-none ms-md-2" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#navigation"
-                                            aria-controls="navigation" aria-expanded="false"
-                                            aria-label="Toggle navigation">
-                                            <span class="navbar-toggler-icon mt-2">
-                                                <span class="navbar-toggler-bar bar1"></span>
-                                                <span class="navbar-toggler-bar bar2"></span>
-                                                <span class="navbar-toggler-bar bar3"></span>
-                                            </span>
-                                        </button>
-                                        <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
-                                            <ul class="navbar-nav navbar-nav-hover mx-auto">
-                                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                                    <a role="button" href="{% url 'publication_liste' %}"
-                                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                                        aria-expanded="false">
-                                                        Recipes
-                                                        <img src="{% static 'img/down-arrow-dark.svg' %}"
-                                                            alt="down-arrow" class="arrow ms-1">
-                                                    </a><!-- a modifier -->
-
-                                                </li>
-                                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                                    <a role="button"
-                                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                                        id="dropdownMenuAccount" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        Account
-                                                        <img src="{% static 'img/down-arrow-dark.svg' %}"
-                                                            alt="down-arrow" class="arrow ms-1">
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-animation dropdown-lg border-radius-xl p-3 mt-0 mt-lg-3"
-                                                        aria-labelledby="dropdownMenuAccount">
-                                                        <div class="row d-none d-lg-flex">
-                                                            <div class="col-6">
-                                                                <div class="py-6 h-100 w-100 d-flex border-radius-lg position-relative dropdown-image"
-                                                                    style="background-image:url('{% static 'img/curved-images/curved8.jpg' %}')">
-                                                                    <div class="mask bg-primary border-radius-lg"></div>
-                                                                    <div
-                                                                        class="d-flex justify-content-center align-items-center text-center text-white font-weight-bold w-100 z-index-1 flex-column">
-                                                                        <div
-                                                                            class="icon icon-shape rounded-circle bg-white shadow text-center">
-                                                                            <i class="ni ni-diamond text-primary text-gradient text-lg"
-                                                                                aria-hidden="true"></i>
-                                                                        </div>
-                                                                        <span class="text-lg mt-2">The Great
-                                                                            Food<br>Experience</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="col-6 ps-0 d-flex justify-content-center flex-column">
-                                                                <ul class="list-group">
-                                                                    <li
-                                                                        class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                                        <a href="{% url 'login' %}"
-                                                                            class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
-                                                                            id="dropdownSignIn">
-                                                                            <span>Log in</span>
-                                                                            <img src="{% static 'img/down-arrow.svg' %}"
-                                                                                alt="down-arrow" class="arrow">
-                                                                        </a>
-
-                                                                    </li>
-                                                                    <li
-                                                                        class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                                        <a class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
-                                                                            id="dropdownSignUp">
-                                                                            <span>Sign Up</span>
-                                                                            <img src="{% static 'img/down-arrow.svg' %}"
-                                                                                alt="down-arrow" class="arrow">
-                                                                        </a>
-                                                                        <div class="dropdown-menu mt-0 py-3 px-2"
-                                                                            aria-labelledby="dropdownSignUp">
-                                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                                href="{% url 'sign-up' %}">
-                                                                                <span>I just want to eat!</span>
-                                                                            </a>
-                                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                                href="{% url 'sign-up-prof' %}">
-                                                                                <span>Become a Professional!</span>
-                                                                            </a>
-                                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                                href="{% url 'sign-up-prov' %}">
-                                                                                <span>I want to provide!</span>
-                                                                            </a>
-
-                                                                        </div>
-                                                                    </li>
-
-
-
-
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </li>
-                                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                                    <a role="button" href="{% url 'blog' %}"
-                                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                                        id="dropdownMenuBlocks" aria-expanded="false">
-                                                        Articles
-
-                                                    </a>
-
-                                                </li>
-                                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                                    <a role="button" href="{% url 'inventory-view' %}"
-                                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                                        id="dropdownMenuDocs" aria-expanded="false">
-                                                        My Inventory
-
-                                                    </a>
-
-                                                </li>
-                                            </ul>
-                                            <ul class="navbar-nav d-lg-block d-none">
-                                                <li class="nav-item">
-                                                    <div class="my-profiles-sec">
-                                                        <span><img src="{% static 'img/resource/aaa.jpg' %}" alt="" class="small-image center-image" />
-                                                        </span>
-                                                    </div>
-
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </nav>
-                                <!-- End Navbar -->
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'navbar.html' %}
                 </div>
             </div>
         </header>
@@ -394,8 +296,13 @@
                     <div class="row no-gape">
                         <aside class="col-lg-3 column border-right">
                             <div class="widget">
-                               
-                            </div>
+				 			<div class="tree_widget-sec">
+				 				<ul>
+									<li><a href="candidates_change_password.html" title=""><i class="la la-flash"></i>Change Password</a></li>
+									<li><a href="{% url 'logout' %}" title=""><i class="la la-unlink"></i>Logout</a></li>
+				 				</ul>
+				 			</div>
+				 		</div>
                             
                         </aside>
                         <div class="col-lg-9 column">
@@ -403,18 +310,31 @@
                                 <div class="profile-title">
                                     <h3>My Profile</h3>
                                     <div class="upload-img-bar">
-                                        <span class="round"><img src="{% static 'img/resource/aa.jpg' %}"
-                                                alt="" /><i>x</i></span>
+                                        <span class="">
+                                            {% if user.profile_picture %}
+                                                <img id="profile-picture-preview" src="{{ user.profile_picture.url }}" alt="" />
+                                                <form method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" name="remove_profile_picture" class="remove-btn">x</button>
+                                                </form>
+                                            {% else %}
+                                                <img id="profile-picture-preview" src="{% static 'img/resource/aa.png' %}" alt="" class="default-profile-picture" />
+                                            {% endif %}
+                                        </span>
                                         <div class="upload-info">
-                                            <a href="#" title="">Browse</a>
-                                            <span>Max file size is 1MB, Minimum dimension: 270x210 And Suitable files
-                                                are .jpg & .png</span>
+                                            <form method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <input type="file" name="profile_picture" accept="image/*" style="display: none;" id="profile-picture-input" onchange="previewProfilePicture(event)">
+                                                <label for="profile-picture-input" class="">Browse Files</label>
+                                                <button type="submit" class="btn btn-success">Update Picutre</button>
+                                            </form>
+                                            <span>Max file size is 1MB, Minimum dimension: 270x270 And Suitable files are .jpg & .png</span>
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="profile-form-edit">
-                                    <form method="post">
+                                    <form method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="row">
                                             <!-- Username -->
@@ -462,17 +382,7 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Gender -->
-                                            <div class="col-lg-6">
-                                                <span class="pf-title">Gender</span>
-                                                <div class="pf-field">
-                                                    <select name="gender" class="chosen">
-                                                        <option value="Male" {% if user.gender == "Male" %}selected{% endif %}>Male</option>
-                                                        <option value="Female" {% if user.gender == "Female" %}selected{% endif %}>Female</option>
-
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            
 
 
 
@@ -569,7 +479,7 @@
                                 <div class="link_widgets">
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <a href="#" title="">Privacy & Seurty </a>
+                                            <a href="#" title="">Privacy & Security </a>
                                             <a href="#" title="">Terms of Serice</a>
                                             <a href="#" title="">Communications </a>
                                             <a href="#" title="">Referral Terms </a>
@@ -626,22 +536,14 @@
     <div class="profile-sidebar">
         <span class="close-profile"><i class="la la-close"></i></span>
         <div class="can-detail-s">
-            <div class="cst"><img src="{% static 'img/resource/es1.jpg' %}" alt="" class="center-image" /></div>
+            <div class="cst"><img src="{{ user.profile_picture.url }}" alt="" class="center-image" /></div>
             <h3> {{ user.first_name }} </h3>
             <span><i>{{user.}}</i> </span>
             <p>{{ user.email }}</p>
             <p>Member Since: {{ user.date_joined }}</p>
             <p><i class="la la-map-marker"></i>{{user.address}}</p>
         </div>
-        <div class="tree_widget-sec">
-            <ul>
-                <li><a href="candidates_profile.html" title=""><i class="la la-file-text"></i>My Profile</a></li>
-                
-                <li><a href="candidates_change_password.html" title=""><i class="la la-flash"></i>Change Password</a>
-                </li>
-                <li><a href="{% url 'logout' %}" title=""><i class="la la-unlink"></i>Logout</a></li>
-            </ul>
-        </div>
+        
     </div><!-- Profile Sidebar -->
 
     <script src="{% static 'js/jquery.min.js' %}" type="text/javascript"></script>
@@ -659,7 +561,16 @@
     <script
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCYc537bQom7ajFpWE5sQaVyz1SQa9_tuY&sensor=true&libraries=places"></script>
 
-
+    <script>
+        function previewProfilePicture(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('profile-picture-preview');
+                output.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </body>
 
 </html>

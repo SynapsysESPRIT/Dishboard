@@ -3,9 +3,11 @@
 from django.urls import path
 from . import views  # Import your views
 from .views import  *
-from django.contrib.auth.views import LoginView, LogoutView , PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth.views import LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 urlpatterns = [
+    path('logout/', user_logout, name='logout'),
+
     path('users/', views.list_users, name='list_users'),
     path('users/<int:user_id>/', views.user_detail_update, name='user_detail_update'),
     path('users/add/', views.add_user, name='sign-up'),
@@ -22,8 +24,6 @@ urlpatterns = [
     path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),
 
     path('login/', Login.as_view() , name="login" ),
-
-    path('logout/', LogoutView.as_view(), name='logout'),  # Adds the logout route
 
     #path('verify-email/<str:token>/', verify_email, name='verify_email'),
 

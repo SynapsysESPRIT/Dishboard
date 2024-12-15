@@ -30,6 +30,7 @@ class User(AbstractUser):
     )
     last_name = models.CharField(max_length=150, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)  # Profile picture field
 
     date_joined = models.DateTimeField(auto_now_add=True)
 

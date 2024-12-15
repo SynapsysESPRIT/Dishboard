@@ -1,48 +1,18 @@
-from django.shortcuts import render
-from django.views.generic import *
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import CreateView, DeleteView
 from django.urls import reverse_lazy
 from .form import ArticleModelForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView
-from django.views.generic import DeleteView
-from django.views.generic import UpdateView
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-# Create your views here.
 from .models import Article
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
-
-from django.http import JsonResponse
-from django.views.decorators.http import require_http_methods
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.stem import PorterStemmer
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from transformers import pipeline
 import json
 
-import nltk
-from django.views.decorators.csrf import csrf_exempt
-
-
-nltk.download('punkt')
-nltk.download('stopwords')
-
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
-
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
-
-
-from transformers import pipeline
-
-
-
+# Initialize the summarization pipeline
+summarizer = pipeline("summarization")
 
 def article_detail(request, article_id):
-    article = ArticleProjet_SE.objects.get(id=article_id)
+    article = get_object_or_404(Article, id=article_id)
     summary = article.get_summary()
     
     context = {
@@ -52,16 +22,13 @@ def article_detail(request, article_id):
     return render(request, 'details.html', context)
 
 def list(request):
-     
-    article = Article.objects.all()
-    
-    return render(request ,'Article/list.html' , {"data" :article})
+    articles = Article.objects.all()
+    return render(request, 'Article/list.html', {"data": articles})
+
 class AddArticle(CreateView):
-    
-    model=Article
-    template_name="Article/add.html"
-    
-    form_class=ArticleModelForm
+    model = Article
+    template_name = "Article/add.html"
+    form_class = ArticleModelForm
     success_url = reverse_lazy('blog')
 
 def detailsClass(request):
@@ -69,74 +36,42 @@ def detailsClass(request):
     if id is None:
         return HttpResponse("ID is missing", status=400)
 
-    item = get_object_or_404(Article, id=id)  # Remplacez `YourModel` par votre modèle
+    item = get_object_or_404(Article, id=id)
     return render(request, 'Article/details.html', {'item': item})
 
-#class UpdateArticle(UpdateView):
-   # model = Article
-   # template_name = "Article/add.html"  # Le formulaire pour ajouter ou modifier l'article
-   #  form_class = ArticleModelForm
-   # success_url = reverse_lazy('list')
-def updateClass(request):
-    # Récupère l'ID passé dans l'URL
-    article_id = request.GET.get('id')  # Utilisation de 'id' comme paramètre de l'URL
-    if not article_id or not article_id.isdigit():  # Vérifier si l'ID est manquant ou invalide
-        return HttpResponse("Invalid or missing ID", status=400)
+def updateClass(request, pk):
+    article = get_object_or_404(Article, pk=pk)
 
-    # Récupère l'article en fonction de l'ID
-    article = get_object_or_404(Article, id=article_id)
-
-    # Traite la mise à jour des champs lorsque la méthode est POST
     if request.method == 'POST':
-        # Met à jour les champs de l'article directement avec les données POST
-        article.titre = request.POST.get('titre', article.titre)  # Utilisez les bons noms de champs
-        article.contenu = request.POST.get('contenu', article.contenu)  # Utilisez les bons noms de champs
-        # Ajoutez d'autres champs à mettre à jour ici...
+        article.titre = request.POST.get('titre', article.titre)
+        article.contenu = request.POST.get('contenu', article.contenu)
+        article.save()
+        return redirect('blog')
 
-        article.save()  # Sauvegarde les modifications
-        return redirect('blog')  # Redirige vers la page du blog après la mise à jour
-
-    # Affiche l'article pour la mise à jour (même si vous n'utilisez pas de formulaire)
     return render(request, 'Article/update.html', {'article': article})
-        
+
 class DeleteArticle(DeleteView):
     model = Article
-    template_name = "Article/delete.html"  # Template pour la confirmation de suppression
+    template_name = "Article/delete.html"
     success_url = reverse_lazy('blog')
 
-
-
 def blog(request):
-    article = Article.objects.all()
-    return render(request, 'Article/blog-posts.html', {"data": article})
-
-
-
-
-from django.http import JsonResponse
-import json
-from django.views.decorators.csrf import csrf_exempt
-from transformers import pipeline
-
-# Initialize the summarization pipeline
-summarizer = pipeline("summarization")
+    articles = Article.objects.all()
+    return render(request, 'Article/blog-posts.html', {"data": articles})
 
 @csrf_exempt
 def summarize_text(request):
     if request.method == 'POST':
         try:
-            # Parse the request body to get the text
             data = json.loads(request.body)
             text = data.get('text', '')
             
             if not text:
                 return JsonResponse({'error': 'No text provided for summarization'}, status=400)
             
-            # Example of limiting text length (optional)
-            if len(text) > 1000:  # Hugging Face models often have a max token length
+            if len(text) > 1000:
                 text = text[:1000]
 
-            # Summarize the text using the Hugging Face model
             summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
             summarized_text = summary[0]['summary_text']
 

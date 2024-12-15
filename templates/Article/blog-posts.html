@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
     <title>
-        Dishboard
+        Dishboard - Articles
     </title>
     <!-- Extra details for Live View on GitHub Pages -->
     <!-- Canonical SEO -->
@@ -141,146 +141,7 @@
     <!-- End Google Tag Manager (noscript) -->
     <!-- Navbar Light -->
     <!-- Navbar -->
-    <div class="container position-sticky z-index-sticky top-0">
-        <div class="row">
-            <div class="col-12">
-                <nav
-                    class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
-                    <div class="container-fluid px-0">
-                        <a class="navbar-brand font-weight-bolder ms-sm-3"
-                            href=" https://demos.creative-tim.com/soft-ui-design-system-pro/presentation.html "
-                            rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom"
-                            target="_blank">
-                            DISHBOARD
-                        </a>
-                        <a href="https://www.creative-tim.com/product/soft-ui-design-system-pro#pricingCard"
-                            class="btn btn-sm  bg-primary  btn-round mb-0 ms-auto d-lg-none d-block">Buy Now</a>
-                        <button class="navbar-toggler shadow-none ms-md-2" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon mt-2">
-                                <span class="navbar-toggler-bar bar1"></span>
-                                <span class="navbar-toggler-bar bar2"></span>
-                                <span class="navbar-toggler-bar bar3"></span>
-                            </span>
-                        </button>
-                        <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
-                            <ul class="navbar-nav navbar-nav-hover mx-auto">
-                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                    <a role="button" href="{% url 'publication_liste' %}"
-                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                        aria-expanded="false">
-                                        Recipes
-                                        <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow"
-                                            class="arrow ms-1">
-                                    </a><!-- a modifier -->
-
-                                </li>
-                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                    <a role="button"
-                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                        id="dropdownMenuAccount" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Account
-                                        <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow"
-                                            class="arrow ms-1">
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-animation dropdown-lg border-radius-xl p-3 mt-0 mt-lg-3"
-                                        aria-labelledby="dropdownMenuAccount">
-                                        <div class="row d-none d-lg-flex">
-                                            <div class="col-6">
-                                                <div class="py-6 h-100 w-100 d-flex border-radius-lg position-relative dropdown-image"
-                                                    style="background-image:url('{% static 'img/curved-images/curved8.jpg' %}')">
-                                                    <div class="mask bg-primary border-radius-lg"></div>
-                                                    <div
-                                                        class="d-flex justify-content-center align-items-center text-center text-white font-weight-bold w-100 z-index-1 flex-column">
-                                                        <div
-                                                            class="icon icon-shape rounded-circle bg-white shadow text-center">
-                                                            <i class="ni ni-diamond text-primary text-gradient text-lg"
-                                                                aria-hidden="true"></i>
-                                                        </div>
-                                                        <span class="text-lg mt-2">The Great Food<br>Experience</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 ps-0 d-flex justify-content-center flex-column">
-                                                <ul class="list-group">
-                                                    <li
-                                                        class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                        <a href="{% url 'login' %}"
-                                                            class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
-                                                            id="dropdownSignIn">
-                                                            <span>Log in</span>
-                                                            <img src="{% static 'img/down-arrow.svg' %}"
-                                                                alt="down-arrow" class="arrow">
-                                                        </a>
-
-                                                    </li>
-                                                    <li
-                                                        class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                        <a class="dropdown-item border-radius-md ps-3 d-flex align-items-center justify-content-between mb-1"
-                                                            id="dropdownSignUp">
-                                                            <span>Sign Up</span>
-                                                            <img src="{% static 'img/down-arrow.svg' %}"
-                                                                alt="down-arrow" class="arrow">
-                                                        </a>
-                                                        <div class="dropdown-menu mt-0 py-3 px-2"
-                                                            aria-labelledby="dropdownSignUp">
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="{% url 'sign-up' %}">
-                                                                <span>I just want to eat!</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="{% url 'sign-up-prof' %}">
-                                                                <span>Become a Professional!</span>
-                                                            </a>
-                                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                                                href="{% url 'sign-up-prov' %}">
-                                                                <span>I want to provide!</span>
-                                                            </a>
-
-                                                        </div>
-                                                    </li>
-
-
-
-
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                    <a role="button" href="{% url 'blog' %}"
-                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                        id="dropdownMenuBlocks" aria-expanded="false">
-                                        Articles
-
-                                    </a>
-
-                                </li>
-                                <li class="nav-item dropdown dropdown-hover mx-2">
-                                    <a role="button" href="{% url 'inventory-view' %}"
-                                        class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-                                        id="dropdownMenuDocs" aria-expanded="false">
-                                        My Inventory
-
-                                    </a>
-
-                                </li>
-                            </ul>
-                            <ul class="navbar-nav d-lg-block d-none">
-                                <li class="nav-item">
-                                    <a href="javascript:;" class="btn btn-sm  btn-dark  btn-round mb-0 me-1"
-                                        onclick="smoothToPricing('pricing-soft-ui')">Buy Now</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-    </div>
+    {% include 'navbar.html' %}
     <!-- -------- START HEADER 11 w/ carousel ------- -->
     <header>
         <br> <br> <br>
@@ -415,16 +276,13 @@
                                         <a href="{% url 'detailsClass' %}?id={{ i.id }}" class="btn btn-sm btn-primary rounded-pill hover-elevate">
                                             <i class="fas fa-book-open me-1 fa-fade"></i> Read More
                                         </a>
-                                        <a href="{% url 'updateArticle' %}?id={{ i.id }}" class="btn btn-sm btn-info rounded-pill hover-elevate">
+                                        <a href="{% url 'updateClass' pk=i.id %}" class="btn btn-sm btn-info rounded-pill hover-elevate">
                                             <i class="fas fa-edit me-1 fa-fade"></i> Edit
                                         </a>
                                         <a href="{% url 'deleteArticle' pk=i.id %}" class="btn btn-sm btn-danger rounded-pill hover-elevate">
                                             <i class="fas fa-trash me-1 fa-fade"></i> Delete
-                                        </a>
-                                        
-                                    </div>
-                                    
-                                    
+                                        </a>                                        
+                                    </div>                                
                                 </div>
                             </div>
                         </div>
@@ -787,29 +645,6 @@
                             <a class="nav-link text-white opacity-8" href="https://www.creative-tim.com/affiliates/new"
                                 target="_blank">
                                 Affiliates
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-2 col-4">
-                    <h6 class="text-white text-sm">Legal</h6>
-                    <ul class="flex-column ms-n3 nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-white opacity-8" href="https://www.creative-tim.com"
-                                target="_blank">
-                                Claim
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white opacity-8" href="https://www.creative-tim.com"
-                                target="_blank">
-                                Privacy
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white opacity-8" href="https://www.creative-tim.com"
-                                target="_blank">
-                                Terms
                             </a>
                         </li>
                     </ul>

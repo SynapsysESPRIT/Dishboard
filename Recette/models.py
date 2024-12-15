@@ -32,7 +32,7 @@ class Recette(models.Model):
     
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='recettes', null=True)
     description = models.TextField()
-    inventory = models.TextField(help_text="Liste d'ingrédients")
+    inventory_summary = models.TextField(blank=True, null=True)  # Ensure this field exists
     instructions = models.TextField()
     cook_time = models.IntegerField(
         validators=[MinValueValidator(1, "Le temps de cuisson doit être au moins 1 minute.")]

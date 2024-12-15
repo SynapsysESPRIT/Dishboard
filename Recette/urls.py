@@ -1,16 +1,14 @@
 from django.urls import path
-from .views import RecetteCreateView
 from .views import *
+
 urlpatterns = [
     # Pour CBV
-    path('ajouter_recette/', RecetteCreateView.as_view(), name='ajouter_recette'),
+    #path('ajouter/', RecetteCreateView.as_view(), name='ajouter_recette'),
     path('recettes/', liste_recettes, name='liste_recettes'),
     path('recette/<int:pk>/', recette_detail, name='recette_detail'),
-    path('deleteclass/<int:pk>', DeleteRecette.as_view() , name="deleteClass"),
-    path('updateclass/<int:pk>', UpdateConference.as_view() , name="updateClass"),
+    path('recette/delete/<int:pk>/', DeleteRecette.as_view(), name='deleteClass'),
+    path('recette/update/<int:pk>/', UpdateConference.as_view(), name='updateClass'),
     path('generate-recipe/', generate_recipe, name='generate_recipe'),
-  
-    # path('ajouter_recette/', ajouter_recette, name='ajouter_recette'),
-
-
+    path('add/', add_recipe, name='add_recipe'),
+    path('ajouter_recette', add_recipe, name='ajouter_recette'),  # Ensure no trailing slash
 ]

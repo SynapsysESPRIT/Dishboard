@@ -26,7 +26,7 @@ def ajouter_publication(request):
         recette = Recette.objects.create(
             titre=request.POST['titre'],
             description=request.POST['description'],
-            inventory=request.POST['inventory'],
+            inventory_summary=request.POST['inventory'],
             instructions=request.POST['instructions'],
             cook_time=request.POST['cook_time'],
             servings=request.POST['servings'],

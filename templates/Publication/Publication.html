@@ -226,13 +226,11 @@
                                     <div class="recipe-info grid-container glass-effect p-4 mb-4 hover-lift">
                                         <div class="info-item">
                                             <i class="fas fa-clock text-warning mb-2"></i>
-                                            <p><b class="text-warning">Temps de cuisson:</b><br>{{
-                                                publication.recette.cook_time }} minutes</p>
+                                            <p><b class="text-warning">Temps de cuisson:</b><br>{{ publication.recette.cook_time }} minutes</p>
                                         </div>
                                         <div class="info-item">
                                             <i class="fas fa-users text-warning mb-2"></i>
-                                            <p><b class="text-warning">Portions:</b><br>{{ publication.recette.servings
-                                                }}</p>
+                                            <p><b class="text-warning">Portions:</b><br>{{ publication.recette.servings }}</p>
                                         </div>
                                         <div class="info-item">
                                             <i class="fas fa-globe text-warning mb-2"></i>
@@ -1232,11 +1230,9 @@
                                 <div class="card-body">
                                     <h5 class="card-title mb-2">
                                         <a href="{% url 'publication_detail' latest_pub.id %}"
-                                            class="text-dark font-weight-bold hover-text-primary">{{ latest_pub.title
-                                            }}</a>
+                                            class="text-dark font-weight-bold hover-text-primary">{{ latest_pub.title }}</a>
                                     </h5>
-                                    <p class="card-text text-muted mb-2">{{
-                                        latest_pub.recette.description|truncatewords:25 }}</p>
+                                    <p class="card-text text-muted mb-2">{{ latest_pub.recette.description|truncatewords:25 }}</p>
                                     <div class="d-flex align-items-center">
                                         <div class="me-4">
                                             <i class="fas fa-clock text-primary"></i>
@@ -1538,8 +1534,7 @@
                                     <div class="form-group floating-label mb-3">
                                         {{ field.label_tag }}
                                         <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}"
-                                            class="form-control bg-white backdrop-blur-sm border-0 shadow-sm" {% if
-                                            field.value %}value="{{ field.value }}" {% endif %}
+                                            class="form-control bg-white backdrop-blur-sm border-0 shadow-sm" {% if field.value %}value="{{ field.value }}" {% endif %}
                                             placeholder="Express yourself...">
                                         <div class="focus-border"></div>
                                     </div>

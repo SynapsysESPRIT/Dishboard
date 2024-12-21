@@ -162,3 +162,7 @@ STATICFILES_DIRS = [
 
 CLAUDE_API_KEY = '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'
 SITE_URL = 'http://localhost:8000'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

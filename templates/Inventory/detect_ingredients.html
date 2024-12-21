@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Ingredient Detection</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #FF5722;
+            --secondary-orange: #FF9800;
+            --light-orange: #FFE0B2;
+            --dark-orange: #E64A19;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-orange) 0%, #FFF3E0 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(255, 87, 34, 0.15);
+        }
+
+        h1 {
+            color: var(--primary-orange);
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-section {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-orange);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-orange);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        #camera-container {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: linear-gradient(45deg, var(--light-orange), white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 87, 34, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .preview-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #FFF3E0, white);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-image:hover {
+            transform: scale(1.02);
+        }
+
+        .detection-results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(45deg, var(--light-orange), white);
+            border-radius: 15px;
+        }
+
+        .detection-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .detection-item:hover {
+            transform: translateX(10px);
+        }
+
+        .confidence-badge {
+            background: var(--primary-orange);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .file-input-label {
+            cursor: pointer;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--light-orange);
+            border-top: 4px solid var(--primary-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>
+            <i class="material-icons" style="vertical-align: middle; color: var(--primary-orange);">camera_enhance</i>
+            Smart Ingredient Detection
+        </h1>
+
+        <form id="ingredient-form" method="POST" enctype="multipart/form-data" action="{% url 'detect-ingredients' %}">
+            {% csrf_token %}
+            
+            <div class="input-section">
+                <label for="file-input" class="btn btn-primary file-input-label">
+                    <i class="material-icons">upload_file</i>
+                    Choose Image
+                </label>
+                <input type="file" name="image" accept="image/*" id="file-input" required>
+                
+                <button type="button" id="camera-button" class="btn btn-secondary">
+                    <i class="material-icons">camera_alt</i>
+                    Use Camera
+                </button>
+            </div>
+
+            <div id="camera-container">
+                <video id="video" autoplay playsinline></video>
+                <button type="button" id="capture-button" class="btn btn-primary" style="margin-top: 1rem;">
+                    <i class="material-icons">photo_camera</i>
+                    Capture Image
+                </button>
+                <canvas id="canvas"></canvas>
+            </div>
+
+            <input type="hidden" name="captured-image" id="captured-image">
+            
+            <div class="preview-container"></div>
+            
+            <div class="loading-spinner" id="loading-spinner"></div>
+
+            <button type="submit" class="btn btn-primary" style="margin: 2rem auto; display: block;">
+                <i class="material-icons">search</i>
+                Detect Ingredients
+            </button>
+        </form>
+
+        {% if detections %}
+        <div class="detection-results">
+            <h2>Detection Results:</h2>
+            {% for detection in detections %}
+            <div class="detection-item">
+                <i class="material-icons" style="color: var(--primary-orange);">check_circle</i>
+                <span>{{ detection.label }}</span>
+                <span class="confidence-badge">{{ detection.confidence }}%</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Get the elements
+        const fileInput = document.getElementById('file-input');
+        const cameraButton = document.getElementById('camera-button');
+        const cameraContainer = document.getElementById('camera-container');
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('capture-button');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const capturedImageInput = document.getElementById('captured-image');
+
+        let cameraStream = null;
+
+        // Enable camera
+        cameraButton.addEventListener('click', function() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert("Camera is not supported on this device.");
+                return;
+            }
+
+            // Show the camera container and hide file input
+            cameraContainer.style.display = 'block';
+            fileInput.style.display = 'none';
+            fileInput.required = false; // Remove the 'required' attribute for file input
+
+            // Access the webcam
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    cameraStream = stream;
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    alert("Error accessing the camera: " + err);
+                });
+        });
+
+        // Capture the image from the video stream
+        captureButton.addEventListener('click', function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+
+            // Set the captured image as a hidden input value (this will be sent when the form is submitted)
+            capturedImageInput.value = imageData;
+
+            // Optionally, display a preview of the captured image
+            const imagePreview = document.createElement('img');
+            imagePreview.src = imageData;
+            document.body.appendChild(imagePreview);
+
+            // Hide the video and display the captured image preview
+            video.style.display = 'none';
+            imagePreview.style.display = 'block';
+        });
+
+        // When the form is submitted, check if a captured image exists and use it instead of the file input
+        document.getElementById('ingredient-form').addEventListener('submit', function(event) {
+            if (capturedImageInput.value) {
+                // Create a Blob from the base64 image data to submit it
+                const imageBlob = dataURItoBlob(capturedImageInput.value);
+                const formData = new FormData(this);
+
+                // Remove the existing file input data if the camera image is present
+                formData.delete('image');
+                formData.append('image', imageBlob, 'captured-image.png');
+
+                // You can send this FormData object to the server asynchronously (AJAX)
+                event.preventDefault(); // Prevent default form submission
+                submitFormWithBlob(formData);
+            }
+        });
+
+        // Function to convert data URI to Blob
+        function dataURItoBlob(dataURI) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uintArray = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                uintArray[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([uintArray], { type: 'image/png' });
+        }
+
+        // Function to submit the form with Blob data (AJAX)
+        function submitFormWithBlob(formData) {
+            fetch("{% url 'detect-ingredients' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Success:", data);
+                // Handle response data (e.g., display detections)
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        }
+
+       // Add your existing JavaScript here
+        // Additional enhancements for UI feedback
+        const form = document.getElementById('ingredient-form');
+        const spinner = document.getElementById('loading-spinner');
+        
+        form.addEventListener('submit', function(event) {
+            spinner.style.display = 'block';
+        });
+
+        // File input preview
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewContainer = document.querySelector('.preview-container');
+                    previewContainer.innerHTML = `
+                        <img src="${e.target.result}" class="preview-image" alt="Preview">
+                    `;
+                }
+                reader.readAsDataURL(file);
+            }
+        }); 
+    </script>
+</body>
+</html>

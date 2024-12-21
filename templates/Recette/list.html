@@ -6816,15 +6816,11 @@
          
             
         <div id="initial-recipe-container">
-          <button id="generate-initial-recipe"class="btn btn-outline-primary">Generate a recipe</button>
+          <button id="generate-initial-recipe" class="btn btn-outline-primary">Generate recipes</button>
           <div id="recipe-result"></div>
       </div>
-      
-    
-    
-    
       <script>
-        document.getElementById('generate-initial-recipe').addEventListener('click', function() {
+        document.getElementById('generate-initial-recipe').addEventListener('click', function () {
             fetch("{% url 'generate_recipe' %}", {
                 method: 'GET',
                 headers: {
@@ -6836,42 +6832,106 @@
                 const recipeResult = document.getElementById('recipe-result');
                 if (data.success) {
                     const recipe = data.recipe;
-      
-                    // Construire l'affichage des ingrédients utilisés
-                    const usedIngredients = recipe.usedIngredients.map(ing => `<li>${ing.name}</li>`).join("");
-      
-                    // Construire l'affichage des ingrédients manquants
-                    const missedIngredients = recipe.missedIngredients.map(ing => `<li>${ing.name}</li>`).join("");
-      
-                    // Construire l'affichage des quantités d'ingrédients
-                    const extendedIngredients = recipe.extendedIngredients
-                        ? recipe.extendedIngredients.map(ing => `<li>${ing.amount} ${ing.unit} ${ing.name}</li>`).join("")
-                        : "<p>Ingrédients détaillés non disponibles.</p>";
-      
-                    // Générer le contenu HTML de la recette
+    
+                    console.log("Données de la recette :", recipe);
+    
+                    // Construire les listes d'ingrédients
+                    const usedIngredients = recipe.usedIngredients && recipe.usedIngredients.length > 0
+                        ? recipe.usedIngredients.map(ing => <li><i class="fas fa-check-circle text-success"></i> ${ing.name}</li>).join("")
+                        : "<p class='text-muted'><i>Aucun ingrédient utilisé trouvé dans l'inventaire.</i></p>";
+                    
+                    const missedIngredients = recipe.missedIngredients && recipe.missedIngredients.length > 0
+                        ? recipe.missedIngredients.map(ing => <li><i class="fas fa-times-circle text-danger"></i> ${ing.name}</li>).join("")
+                        : "<p class='text-muted'><i>Aucun ingrédient manquant trouvé.</i></p>";
+                    
+                    const extendedIngredients = recipe.extendedIngredients && recipe.extendedIngredients.length > 0
+                        ? recipe.extendedIngredients.map(ing => `
+                            <li><i class="fas fa-utensils text-primary"></i> ${ing.amount} ${ing.unit || ''} ${ing.name}</li>
+                        `).join("")
+                        : "<p class='text-muted'><i>Ingrédients détaillés non disponibles.</i></p>";
+    
+                    // Contenu HTML stylé
                     recipeResult.innerHTML = `
-                        <h3>${recipe.title}</h3>
-                        <img src="${recipe.image}" alt="${recipe.title}" />
-                        <p><strong>Ingrédients utilisés :</strong></p>
-                        <ul>${usedIngredients}</ul>
-                        <p><strong>Ingrédients manquants :</strong></p>
-                        <ul>${missedIngredients}</ul>
-                        
-                        <p><strong>Ingrédients exacts avec quantités :</strong></p>
-                        <ul>${extendedIngredients}</ul>
-                        
-                        <p><strong>Temps de cuisson :</strong> ${recipe.readyInMinutes} minutes</p>
-                        
-                        <p><strong>Instructions :</strong></p>
-                        <p>${recipe.instructions || "Instructions non disponibles."}</p>
+                       <div class="card shadow-lg border-0 mb-4" style="border-radius: 15px;">
+    <div class="card-body text-center">
+        <h3 class="card-title text-primary mb-4">${recipe.title}</h3>
+        <div class="mb-4">
+            <img src="${recipe.image}" alt="${recipe.title}" class="rounded-circle shadow" 
+                style="object-fit: cover; width: 150px; height: 150px; border: 4px solid #e9ecef;">
+        </div>
+        <p><strong>Cooking time:</strong> ${recipe.readyInMinutes} minutes</p>
+        <hr>
+        <h5 class="text-primary">Exact ingredients with quantities:</h5>
+        <ul class="list-unstyled">${extendedIngredients}</ul>
+        <p><strong>Number of servings:</strong> ${recipe.servings}</p>
+        <h5 class="text-muted">Instructions:</h5>
+        <p>${recipe.instructions || '<i>Instructions not available.</i>'}</p>
+        <hr>
+  
+
+                                
+                                
+                                <div class="text-center mt-4">
+                                    <button id="save-recipe" class="btn btn-success btn-lg shadow-sm">Enregistrer cette recette</button>
+                                </div>
+                            </div>
+                        </div>
                     `;
+    
+                    // Ajouter l'événement pour enregistrer la recette
+                    document.getElementById('save-recipe').addEventListener('click', function () {
+                        const payload = {
+                            title: recipe.title || 'Recette sans titre',
+                            description: 'Recette générée via Spoonacular',
+                            inventory: recipe.extendedIngredients?.map(ing => ing.original).join(', ') || 'Ingrédients non spécifiés',
+                            instructions: recipe.instructions || 'Aucune instruction disponible',
+                            cook_time: recipe.readyInMinutes || 30,
+                            servings: recipe.servings || 1,
+                            cuisine: 'Non spécifiée',
+                            difficulty_level: 'Facile',
+                            image: recipe.image
+                        };
+    
+                        fetch("{% url 'save_generated_recipe' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify(payload)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: 'Succès !',
+                                    text: 'La recette a été enregistrée avec succès.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Erreur !',
+                                    text: 'Une erreur est survenue lors de l’enregistrement.',
+                                    icon: 'error',
+                                    confirmButtonText: 'Réessayer'
+                                });
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                    });
+    
                 } else {
-                    recipeResult.innerHTML = `<p>${data.message}</p>`;
+                    recipeResult.innerHTML = <div class="alert alert-warning" role="alert">${data.message}</div>;
                 }
             })
-            .catch(error => console.error('Erreur:', error));
+            .catch(error => {
+                console.error('Erreur:', error);
+                const recipeResult = document.getElementById('recipe-result');
+                recipeResult.innerHTML = <div class="alert alert-danger" role="alert">Une erreur est survenue. Veuillez réessayer.</div>;
+            });
         });
-      </script>
+    </script>
       
             
 <div class="container">
@@ -6885,39 +6945,13 @@
       </div>
 
       <!-- Formulaire de filtres -->
-     <button id="show-user-recipes" class="btn btn-primary">Afficher mes recettes</button>
-<h3>Recettes des autres utilisateurs</h3>
+     <button id="show-user-recipes" class="btn btn-primary">list of recipies</button>
+
       <!-- Cartes de recettes -->
-       {% for recette in other_recettes %}
-      <div class="col-lg-4 col-md-6">
-        <div class="card card-blog card-plain">
-          <div class="position-relative">
-            <a class="d-block blur-shadow-image">
-              
-            </a>
-           
-          </div>
-                  {% if recette.image %}
-          <img src="{{ recette.image.url }}" alt="{{ recette.titre }}" class="img-fluid shadow" style="width: 100%; height: 350px; object-fit: cover; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transition: transform 0.3s ease, filter 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.filter='brightness(0.8)'" onmouseout="this.style.transform='scale(1)'; this.style.filter='brightness(1)'">
-{% else %}
-          <div class="no-image-placeholder d-flex align-items-center justify-content-center" style="height: 350px; background-color: #f8f9fa; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-            <i class="fas fa-image text-muted" style="font-size: 4rem;"></i>
-            <p class="text-muted mb-0 ml-2">No images available</p>
-          </div>
-{% endif %}<div class="card-body px-1 pt-3"            <p class="text-gradient text-dark mb-2 text-sm"> Cuisine:{{ recette.cuisine }} • {{ recette.servings }} Portions • {{ recette.cook_time }} min</p>            <a href="{% url 'recette_detail' pk=recette.pk %}">              <h5>{{ recette.titre }}</h5>
-            </a>
-            <p>{{ recette.description|truncatewords:15 }}</p>
-            <p class="text-gradient text-dark mb-2 text-sm">Difficulty : {{ recette.difficulty_level }}</p>
-            <a href="{% url 'recette_detail' pk=recette.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
-            <a href="{% url 'deleteClass' recette.id %}" class="btn btn-outline-primary btn-sm">Delete</a>
-            <a href="{% url 'updateClass' recette.id %}" class="btn btn-outline-primary btn-sm"> Update</a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+      
+   
 <div id="user-recipes" style="display: none;">
-        <h3>Mes Recettes</h3>
+      
         {% for recette in client_recettes %}
 <div class="col-lg-4 col-md-6">
         <div class="card card-blog card-plain">

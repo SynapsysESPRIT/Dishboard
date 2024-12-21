@@ -8708,9 +8708,9 @@
                                 </svg>
                             </div>
                             <h2 class="text-white up mb-0">Or Capture a Snapshot of Your Pantry Instead</h2>
-                            <a href=".//sections/elements/buttons.html" target="_blank"
-                                class="btn btn-outline-white mt-5 up btn-round">Try our AI-based Ingredient
-                                Detector</a>
+                            <a href="{% url 'detect-ingredients' %}" class="btn btn-outline-white mt-5 up btn-round">
+                                Try our AI-based Ingredient Detector
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -8778,6 +8778,8 @@
     <script src="{% static 'assets/js/soft-design-system.min.js' %}" type="text/javascript"></script>
 
 
+
+    
 </body>
 
 </html>

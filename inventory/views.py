@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 
 from django.contrib.auth.models import User
 
+from django.conf import settings
+from django.http import JsonResponse
+from ultralytics import YOLO
+import os
+import cv2
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
@@ -86,3 +91,108 @@ def inventory_view(request):
         'selected_category': selected_category,
         'member_since': member_since
     })
+    
+    
+    
+# Map YOLO model labels to human-readable names
+ingredient_mapping = {
+    'ingredient_2': 'garlic',
+    'ingredient_3': 'ginger',
+    'ingredient_4': 'apple',
+    'ingredient_5': 'honey',
+    'ingredient_6': 'ingredient_6_name',  # Replace with the actual ingredient name
+    'ingredient_7': 'lemon',
+    'ingredient_8': 'milk',
+    'ingredient_9': 'ingredient_9_name',  # Replace with the actual ingredient name
+    'ingredient_10': 'ingredient_10_name',  # Replace with the actual ingredient name
+    'ingredient_11': 'ingredient_11_name',  # Replace with the actual ingredient name
+    'ingredient_12': 'orange',
+    'ingredient_13': 'lettuce',
+    'ingredient_14': 'parsley',
+    'ingredient_15': 'ingredient_15_name',  # Replace with the actual ingredient name
+    'ingredient_16': 'meat',
+    'ingredient_17': 'potato',
+    'ingredient_18': 'shrimp',
+    'ingredient_19': 'rice',
+    'ingredient_20': 'onions',
+    'ingredient_21': 'ingredient_21_name',  # Replace with the actual ingredient name
+    'ingredient_22': 'tomato',
+    'ingredient_23': 'ingredient_23_name',  # Replace with the actual ingredient name
+    'ingredient_24': 'carrot',
+    'ingredient_25': 'chicken',
+    'ingredient_26': 'pepper',
+    'ingredient_27': 'ingredient_27_name',  # Replace with the actual ingredient name
+    'ingredient_28': 'cucumber',
+    'ingredient_29': 'egg',
+    'ingredient_30': 'fish',
+    'ingredient_31': 'ingredient_31_name',  # Replace with the actual ingredient name
+}
+
+
+
+
+# Load YOLO model
+MODEL_PATH = os.path.join(settings.BASE_DIR, 'inventory/yolo_model/best.pt')
+yolo_model = YOLO(MODEL_PATH)
+
+# Retrieve class names (ingredient labels) from the YOLO model
+ingredient_labels = yolo_model.names
+def detect_ingredients(request):
+    if request.method == 'POST' and request.FILES.get('image'):
+        uploaded_image = request.FILES['image']
+        file_path = os.path.join(settings.MEDIA_ROOT, uploaded_image.name)
+
+        # Save the image temporarily
+        with open(file_path, 'wb') as f:
+            for chunk in uploaded_image.chunks():
+                f.write(chunk)
+
+        # Perform YOLO inference
+        image = cv2.imread(file_path)
+        results = yolo_model.predict(source=image, imgsz=640, save=False, show=False)
+
+        # Parse YOLO results
+        detections = []
+        missing_ingredients = []
+        for box, score, class_id in zip(results[0].boxes.xyxy, results[0].boxes.conf, results[0].boxes.cls):
+            if score > 0.65:  # Confidence threshold
+                # Map the YOLO class ID to a human-readable ingredient name
+                ingredient_id = ingredient_labels[int(class_id)]
+                ingredient_name = ingredient_mapping.get(ingredient_id, None)
+
+                if ingredient_name:
+                    detections.append({
+                        'label': ingredient_name,
+                        'confidence': float(score),
+                        'box': [int(coord) for coord in box]
+                    })
+
+                    # Check if the ingredient exists in the database
+                    try:
+                        ingredient = Ingredient.objects.get(label__iexact=ingredient_name)
+                        # Add ingredient to inventory
+                        user = request.user
+                        inventory, created = Inventory.objects.get_or_create(user=user)
+                        inventory_item, created = InventoryIngredient.objects.get_or_create(
+                            inventory=inventory,
+                            ingredient=ingredient,
+                            defaults={'quantity': 1}
+                        )
+                        if not created:
+                            inventory_item.quantity += 1
+                            inventory_item.save()
+                    except Ingredient.DoesNotExist:
+                        missing_ingredients.append(ingredient_name)
+                else:
+                    missing_ingredients.append(ingredient_id)  # Add ingredient ID if no match
+
+        # Remove the temporary image
+        os.remove(file_path)
+
+        # Return the detections as JSON
+        return JsonResponse({
+            'detections': detections,
+            'missing_ingredients': missing_ingredients
+        })
+
+    return render(request, 'inventory/detect_ingredients.html')

@@ -13,21 +13,68 @@ from django.http import JsonResponse
 from inventory.models import InventoryIngredient
 import requests
 
+import random
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import json
+@csrf_exempt  # Utilisé pour désactiver la vérification CSRF (utile pour les tests, à ne pas utiliser en production sans sécurisation)
+@require_POST
+@csrf_exempt  # Désactive la vérification CSRF (utile pour les tests)
+@require_POST
+def save_generated_recipe(request):
+    try:
+        data = json.loads(request.body)
+        
+        # Afficher les données reçues pour vérifier leur structure
+        print("Données reçues:", data)
+        
+        # Récupérer l'utilisateur actuel (ici, assigner à None pour un test simplifié)
+        client = request.user.client  # À ajuster selon le cas d'utilisation
+        
+        # Formater correctement l'inventaire
+        inventory_data = data.get('inventory', [])
+        inventory_summary = "\n- ".join(inventory_data) if inventory_data else ''
+
+        # Créer une nouvelle recette
+        recette = Recette.objects.create(
+            titre=data.get('title', 'Recette sans titre'),
+            description = data.get('description', 'Description non fournie.'),
+            inventory_summary=inventory_summary,  # Formater l'inventaire
+            instructions=data.get('instructions', 'Aucune instruction disponible'),
+            cook_time=data.get('readyInMinutes', 30),
+            servings=data.get('servings', 4), # Ajustez si vous avez des données pour le nombre de portions
+            cuisine='Inconnue',  # Ajustez selon les données
+            difficulty_level='Facile',  # Ajustez selon les données
+            image=data.get('image', None),
+            client=client
+        )
+
+        # Vérifiez que la recette a été correctement enregistrée
+        print("Recette enregistrée:", recette)
+        
+        return JsonResponse({'success': True, 'message': 'Recette enregistrée avec succès.'})
+    
+    except Exception as e:
+        # En cas d'erreur, afficher l'erreur dans les logs
+        print("Erreur:", str(e))
+        return JsonResponse({'success': False, 'message': str(e)})
+
+
 @login_required
 def generate_recipe(request):
     # Obtenir l'inventaire de l'utilisateur connecté
     user_inventory = InventoryIngredient.objects.filter(inventory__user=request.user)
-    print("User Inventory in generate_recipe:", user_inventory)  # Debug print
-
-    # Récupérer les ingrédients de l'inventaire
+    
+    # Récupérer les ingrédients de l'inventaire de l'utilisateur
     ingredients = [item.ingredient.label for item in user_inventory]
     ingredients_list = ",".join(ingredients)
 
-    # Utiliser l'API Spoonacular pour générer des recettes
+    # Faire l'appel à l'API Spoonacular pour récupérer des recettes
     url = "https://api.spoonacular.com/recipes/findByIngredients"
     params = {
         "ingredients": ingredients_list,
-        "number": 5,  # Récupérer plusieurs recettes pour diversifier
+        "number": 5,  # Nombre de recettes à récupérer
         "ranking": 2,  # Prioriser les ingrédients exacts
         "apiKey": "1f189ba4dc134083a582b76c970ff5a8",
     }
@@ -37,11 +84,19 @@ def generate_recipe(request):
     if response.status_code == 200:
         recipes = response.json()
         if recipes:
-            import random
-            recipe = random.choice(recipes)  # Choisir une recette aléatoire
-            return JsonResponse({"success": True, "recipe": recipe})
+            # Choisir une recette aléatoire parmi celles renvoyées par l'API
+            recipe = random.choice(recipes)  # Recette aléatoire
+            recipe_id = recipe.get('id')
+            details_url = f"https://api.spoonacular.com/recipes/{recipe_id}/information"
+            details_params = {
+                "apiKey": "1f189ba4dc134083a582b76c970ff5a8"
+            }
+            details_response = requests.get(details_url, params=details_params)
+            if details_response.status_code == 200:
+                recipe_details = details_response.json()
+                return JsonResponse({"success": True, "recipe": recipe_details})
         else:
-            return JsonResponse({"success": False, "message": "Aucune recette trouvée."})
+            return JsonResponse({"success": False, "message": "Aucune recette trouvée avec les ingrédients fournis."})
     else:
         return JsonResponse({"success": False, "message": "Erreur lors de l'appel à l'API Spoonacular."})
 
